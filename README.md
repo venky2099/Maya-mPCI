@@ -5,7 +5,7 @@ M.Sc. candidate, Data Science and Artificial Intelligence, BITS Pilani
 Nexus Learning Labs, Bengaluru, India
 ORCID: [0000-0002-3315-7907](https://orcid.org/0000-0002-3315-7907)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19228975.svg)](https://doi.org/10.5281/zenodo.19228975)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19397010.svg)](https://doi.org/10.5281/zenodo.19397010)
 [![Series](https://img.shields.io/badge/Maya%20Research%20Series-Paper%208-blueviolet)](https://github.com/venky2099)
 [![Benchmark](https://img.shields.io/badge/Benchmark-Split--CIFAR--100%20CIL-orange)](https://github.com/venky2099/Maya-Shunyata)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -130,7 +130,7 @@ Maya-Shunyata/
 │   └── utils/
 │       └── config.py                 # KARMA_THRESHOLD=0.05, KARMA_DECAY_RATE=0.002315
 ├── run_shunyata_cil.py               # Main CIL experiment
-├── run_ablation_shunyata.py          # 6-condition ablation
+├── run_ablation_shunyata.py          # 7-condition ablation (A–F + D★)
 ├── run_shunyata_vairagya_gated.py    # D★ targeted experiment
 ├── sign_paper.py                     # LSB steganographic IP signing
 ├── docs/
@@ -195,13 +195,13 @@ python run_shunyata_vairagya_gated.py
 
 ---
 
-## Dashboard
+## Dashboard & FAQ
 
-Interactive dashboard with live hyperparameter controls, Maya developmental animation, and bilingual EN/ZH interface:
+**[🧠 Interactive Dashboard →](https://venky2099.github.io/Maya-Shunyata/docs/maya_shunyata_dashboard.html)**
+A fully gamified, bilingual (EN/ZH) research companion. Drag sliders to modify `KARMA_THRESHOLD`, `BUDDHI`, `VAIRAGYA_PROTECTION_THRESHOLD`, and `KARMA_DECAY_RATE` in real time — watch the effective pruning threshold update live, select any ablation condition to load its results, and follow Maya's developmental animation from Age 5 to Age 21 as Buddhi grows. Press `R` at any time to reset all values to the canonical published configuration. Four live charts: Karma accumulation, Vairagya protection growth, Buddhi S-curve, and cumulative pruning by task boundary. Fully navigable by paper section.
 
-**[🧠 Open Dashboard →](https://venky2099.github.io/Maya-Shunyata/docs/maya_shunyata_dashboard.html)**
-
-**[❓ Searchable FAQ →](https://venky2099.github.io/Maya-Shunyata/docs/faq.html)** · Bilingual EN/ZH · Silly to advanced · 20 questions
+**[❓ Searchable FAQ →](https://venky2099.github.io/Maya-Shunyata/docs/faq.html)**
+20 questions spanning four levels — Silly (what is Śūnyatā? does AI feel karma?), Basic (what does Karma accumulate? why did C = A?), Advanced (why didn't D★ fully solve the problem? what is the ORCID magic number?), and Code (how do I run the ablation? how does sign_paper.py work?). Fully bilingual EN/ZH with instant search and category filter. Designed so a non-ML reader can understand the experiment, and a PhD student can find what they need.
 
 ---
 
@@ -213,8 +213,8 @@ Interactive dashboard with live hyperparameter controls, Maya developmental anim
              Learning in Affective Spiking Neural Networks},
   author  = {Swaminathan, Venkatesh},
   year    = {2026},
-  doi     = {10.5281/zenodo.XXXXXXX},
-  url     = {https://doi.org/10.5281/zenodo.XXXXXXX},
+  doi     = {10.5281/zenodo.19397010},
+  url     = {https://doi.org/10.5281/zenodo.19397010},
   note    = {Nexus Learning Labs, Bengaluru. Part of the Maya Research Series.}
 }
 ```
