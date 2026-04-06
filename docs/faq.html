@@ -3,33 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maya-Śūnyatā FAQ</title>
+<title>Maya Research Series FAQ · P1-P9</title>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@300;400&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0a0a0f;--surface:#11111a;--surface2:#1a1a28;--border:#2a2a3d;
-  --accent:#7c6fff;--accent2:#4ecdc4;--gold:#f5c842;
-  --text:#e8e8f0;--text-dim:#8888aa;
-}
+:root{--bg:#0a0a0f;--surface:#11111a;--surface2:#1a1a28;--border:#2a2a3d;--accent:#7c6fff;--accent2:#4ecdc4;--gold:#f5c842;--prana:#00d4aa;--text:#e8e8f0;--text-dim:#8888aa}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;padding:32px 24px}
-.container{max-width:860px;margin:0 auto}
-header{text-align:center;margin-bottom:40px}
-.badge{display:inline-block;background:#1a1a35;border:1px solid var(--accent);border-radius:20px;padding:4px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:12px}
-h1{font-size:36px;font-weight:300;margin-bottom:8px}
-h1 em{color:var(--accent);font-style:normal}
-.subtitle{color:var(--text-dim);font-size:15px;margin-bottom:20px}
-.controls{display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap;align-items:center}
+.container{max-width:900px;margin:0 auto}
+header{text-align:center;margin-bottom:32px}
+.badge{display:inline-block;background:#1a1a35;border:1px solid var(--accent);border-radius:20px;padding:4px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:8px}
+.badge-final{display:inline-block;background:#1a1500;border:1px solid var(--gold);border-radius:20px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:2px;margin-left:8px}
+h1{font-size:34px;font-weight:300;margin-bottom:8px}
+h1 em{color:var(--prana);font-style:normal}
+.subtitle{color:var(--text-dim);font-size:15px;margin-bottom:24px}
+.hub{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:28px}
+.hub-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-bottom:16px}
+.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px;margin-bottom:16px}
+.hub-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:block;transition:all 0.2s}
+.hub-card:hover{border-color:var(--prana);transform:translateY(-1px)}
+.hub-card.current{border-color:var(--prana);background:rgba(0,212,170,0.06)}
+.hub-card.tool{border-color:var(--accent2)}
+.hub-card.tool:hover{border-color:var(--accent2)}
+.hub-paper{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);margin-bottom:3px}
+.hub-name{font-size:13px;color:var(--text);font-weight:600;margin-bottom:3px}
+.hub-aa{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--prana);margin-bottom:6px}
+.hub-links{display:flex;gap:5px;flex-wrap:wrap}
+.hub-link{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:8px;border:1px solid;text-decoration:none;transition:all 0.2s}
+.hub-link.doi{color:var(--accent);border-color:var(--accent)}
+.hub-link.doi:hover{background:var(--accent);color:var(--bg)}
+.hub-link.gh{color:var(--text-dim);border-color:var(--border)}
+.hub-link.gh:hover{border-color:var(--text);color:var(--text)}
+.hub-link.dash{color:var(--prana);border-color:var(--prana)}
+.hub-link.dash:hover{background:var(--prana);color:var(--bg)}
+.hub-link.faq{color:var(--gold);border-color:var(--gold)}
+.hub-link.faq:hover{background:var(--gold);color:var(--bg)}
+.hub-extra{display:flex;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--border)}
+.hub-extra-btn{font-family:'JetBrains Mono',monospace;font-size:10px;padding:5px 14px;border-radius:20px;border:1px solid;text-decoration:none;transition:all 0.2s}
+.hub-extra-btn.site{color:var(--prana);border-color:var(--prana)}
+.hub-extra-btn.site:hover{background:var(--prana);color:var(--bg)}
+.hub-extra-btn.orcid{color:var(--accent2);border-color:var(--accent2)}
+.hub-extra-btn.orcid:hover{background:var(--accent2);color:var(--bg)}
+.hub-extra-btn.tool{color:var(--gold);border-color:var(--gold)}
+.hub-extra-btn.tool:hover{background:var(--gold);color:var(--bg)}
+.controls{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
 #search{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 16px;color:var(--text);font-size:15px;font-family:'Crimson Pro',serif;outline:none}
-#search:focus{border-color:var(--accent)}
+#search:focus{border-color:var(--prana)}
 #search::placeholder{color:var(--text-dim)}
 .filter-btns{display:flex;gap:8px;flex-wrap:wrap}
 .filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px;cursor:pointer;font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;transition:all 0.2s}
-.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--accent)}
+.filter-btn:hover,.filter-btn.active{border-color:var(--prana);color:var(--prana)}
 .lang-btn{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;cursor:pointer;font-size:12px;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-left:auto}
 .count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:16px}
-.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;transition:border-color 0.2s}
-.faq-item:hover{border-color:var(--accent)}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s}
+.faq-item:hover{border-color:var(--prana)}
+.faq-item.series-item{border-left:3px solid var(--prana)}
 .faq-q{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .faq-q-text{font-size:16px;line-height:1.4}
 .faq-tag{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid;flex-shrink:0;margin-top:2px}
@@ -38,27 +65,154 @@ h1 em{color:var(--accent);font-style:normal}
 .tag-advanced{color:var(--accent);border-color:var(--accent)}
 .tag-philosophy{color:#c084fc;border-color:#c084fc}
 .tag-code{color:var(--gold);border-color:var(--gold)}
+.tag-series{color:var(--prana);border-color:var(--prana)}
 .faq-chevron{color:var(--text-dim);font-size:12px;flex-shrink:0;transition:transform 0.3s;margin-top:4px}
 .faq-item.open .faq-chevron{transform:rotate(90deg)}
 .faq-a{display:none;padding:0 20px 16px;color:var(--text-dim);font-size:15px;line-height:1.7;border-top:1px solid var(--border)}
 .faq-item.open .faq-a{display:block}
 .faq-a code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent2)}
 .faq-a strong{color:var(--text)}
+.faq-a a{color:var(--prana)}
 .no-results{text-align:center;color:var(--text-dim);padding:40px;font-style:italic}
 footer{text-align:center;margin-top:48px;color:var(--text-dim);font-size:13px}
-footer a{color:var(--accent)}
+footer a{color:var(--prana);text-decoration:none}
+@media(max-width:600px){.hub-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="container">
 <header>
-  <div class="badge">MAYA RESEARCH SERIES · P8 FAQ</div>
-  <h1><em>Maya-Śūnyatā</em> FAQ</h1>
-  <p class="subtitle">From silly to advanced · Bilingual EN/ZH · Searchable</p>
+  <div>
+    <span class="badge">MAYA RESEARCH SERIES · P1-P9 FAQ</span>
+    <span class="badge-final">SERIES COMPLETE</span>
+  </div>
+  <h1>Maya Research Series <em>FAQ</em></h1>
+  <p class="subtitle">From silly to advanced · Bilingual EN/ZH · All papers · All links · One tab</p>
 </header>
 
+<div class="hub">
+  <div class="hub-title" id="hub-title">SERIES HUB · ALL PAPERS · ALL RESOURCES IN ONE PLACE</div>
+  <div class="hub-grid">
+
+    <div class="hub-card">
+      <div class="hub-paper">P1 · 2026</div>
+      <div class="hub-name">Nociceptive Metaplasticity</div>
+      <div class="hub-aa">Bhaya · Pain signal</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19151563" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-Nexus-Core" target="_blank">GitHub</a>
+      </div>
+    </div>
+
+    <div class="hub-card">
+      <div class="hub-paper">P2 · 2026</div>
+      <div class="hub-name">Maya-OS</div>
+      <div class="hub-aa">Affective arbitration</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19160123" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-OS" target="_blank">GitHub</a>
+      </div>
+    </div>
+
+    <div class="hub-card">
+      <div class="hub-paper">P3 · 2026</div>
+      <div class="hub-name">Maya-CL</div>
+      <div class="hub-aa">AA=62.38% TIL</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19201769" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-CL" target="_blank">GitHub</a>
+      </div>
+    </div>
+
+    <div class="hub-card">
+      <div class="hub-paper">P4 · 2026</div>
+      <div class="hub-name">Maya-Smriti</div>
+      <div class="hub-aa">AA=31.84% CIL</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19228975" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-Smriti" target="_blank">GitHub</a>
+      </div>
+    </div>
+
+    <div class="hub-card">
+      <div class="hub-paper">P5 · 2026</div>
+      <div class="hub-name">Maya-Viveka</div>
+      <div class="hub-aa">AA=16.03%</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19279002" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-Viveka" target="_blank">GitHub</a>
+        <a class="hub-link dash" href="https://venky2099.github.io/Maya-Viveka/maya_viveka_dashboard.html" target="_blank">Dashboard</a>
+      </div>
+    </div>
+
+    <div class="hub-card">
+      <div class="hub-paper">P6 · 2026</div>
+      <div class="hub-name">Maya-Chitta</div>
+      <div class="hub-aa">AA=14.42%</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19337041" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-Chitta" target="_blank">GitHub</a>
+        <a class="hub-link dash" href="https://venky2099.github.io/Maya-Chitta/maya_chitta_dashboard_v2.html" target="_blank">Dashboard</a>
+      </div>
+    </div>
+
+    <div class="hub-card">
+      <div class="hub-paper">P7 · 2026</div>
+      <div class="hub-name">Maya-Manas</div>
+      <div class="hub-aa">AA=15.19% · Best BWT</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19363006" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-Manas" target="_blank">GitHub</a>
+        <a class="hub-link dash" href="https://venky2099.github.io/Maya-Manas/maya_manas_dashboard.html" target="_blank">Dashboard</a>
+      </div>
+    </div>
+
+    <div class="hub-card">
+      <div class="hub-paper">P8 · 2026</div>
+      <div class="hub-name">Maya-Shunyata</div>
+      <div class="hub-aa">Karma + Pruning</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19397010" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-Shunyata" target="_blank">GitHub</a>
+        <a class="hub-link dash" href="https://venky2099.github.io/Maya-Shunyata/docs/maya_shunyata_dashboard.html" target="_blank">Dashboard</a>
+        <a class="hub-link faq" href="https://venky2099.github.io/Maya-Shunyata/docs/faq.html" target="_blank">FAQ</a>
+      </div>
+    </div>
+
+    <div class="hub-card current">
+      <div class="hub-paper">P9 · 2026 FINAL</div>
+      <div class="hub-name">Maya-Prana</div>
+      <div class="hub-aa">AA=12.72% · Series complete</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.PENDING" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/Maya-Prana" target="_blank">GitHub</a>
+        <a class="hub-link dash" href="https://venky2099.github.io/Maya-Prana/docs/maya_prana_dashboard.html" target="_blank">Dashboard</a>
+        <a class="hub-link faq" href="https://venky2099.github.io/Maya-Prana/docs/faq.html" target="_blank">FAQ</a>
+      </div>
+    </div>
+
+    <div class="hub-card tool">
+      <div class="hub-paper">Tool · 2026</div>
+      <div class="hub-name">cl-metrics</div>
+      <div class="hub-aa">CIL evaluation library</div>
+      <div class="hub-links">
+        <a class="hub-link doi" href="https://doi.org/10.5281/zenodo.19388144" target="_blank">DOI</a>
+        <a class="hub-link gh" href="https://github.com/venky2099/cl-metrics" target="_blank">GitHub</a>
+        <a class="hub-link faq" href="https://venky2099.github.io/cl-metrics/faq.html" target="_blank">FAQ</a>
+      </div>
+    </div>
+
+  </div>
+  <div class="hub-extra">
+    <a class="hub-extra-btn site" href="https://venky2099.github.io/" target="_blank">Research Journey</a>
+    <a class="hub-extra-btn orcid" href="https://orcid.org/0000-0002-3315-7907" target="_blank">ORCID 0000-0002-3315-7907</a>
+    <a class="hub-extra-btn tool" href="https://github.com/venky2099/cl-metrics" target="_blank">cl-metrics Library</a>
+    <a class="hub-extra-btn orcid" href="https://www.researchgate.net/profile/Venkatesh-Swaminathan-9" target="_blank">ResearchGate</a>
+  </div>
+</div>
+
 <div class="controls">
-  <input type="text" id="search" placeholder="Search questions..." oninput="filterFAQ()">
+  <input type="text" id="search" placeholder="Search all 30 questions..." oninput="render()">
   <div class="filter-btns">
     <button class="filter-btn active" onclick="setFilter('all')" data-filter="all">All</button>
     <button class="filter-btn" onclick="setFilter('silly')" data-filter="silly">Silly</button>
@@ -66,173 +220,246 @@ footer a{color:var(--accent)}
     <button class="filter-btn" onclick="setFilter('advanced')" data-filter="advanced">Advanced</button>
     <button class="filter-btn" onclick="setFilter('philosophy')" data-filter="philosophy">Philosophy</button>
     <button class="filter-btn" onclick="setFilter('code')" data-filter="code">Code</button>
+    <button class="filter-btn" onclick="setFilter('series')" data-filter="series">Series</button>
   </div>
   <button class="lang-btn" onclick="toggleLang()">中文</button>
 </div>
 
-<div class="count" id="count">Showing all questions</div>
+<div class="count" id="count">Showing all 30 questions</div>
 <div id="faq-list"></div>
 
 <footer>
-  <p>Maya-Śūnyatā · Nexus Learning Labs, Bengaluru · <a href="https://venky2099.github.io/Maya-Shunyata/maya_shunyata_dashboard.html">Interactive Dashboard</a></p>
+  <p>Maya-Prana · Paper 9 of 9 · Nexus Learning Labs, Bengaluru ·
+    <a href="https://venky2099.github.io/Maya-Prana/docs/maya_prana_dashboard.html">Dashboard</a> ·
+    <a href="https://venky2099.github.io/">Research Journey</a>
+  </p>
   <p style="margin-top:4px;font-size:11px;font-family:'JetBrains Mono',monospace;color:#333">MayaNexusVS2026NLL_Bengaluru_Narasimha</p>
 </footer>
 </div>
 
 <script>
-let lang = 'en';
-let activeFilter = 'all';
+let currentLang='en', currentFilter='all';
 
-const FAQ = [
-  // SILLY
-  { tag:'silly', en_q:"Is Maya a real person?", zh_q:"玛雅是真实的人吗？",
-    en_a:"Maya is a simulated mind — a spiking neural network that learns to classify images across 100 categories without forgetting what it already knows. The name comes from the Sanskrit concept of Maya (माया) — the veil of illusion. She is not a person, but she behaves like one: she accumulates experience, protects what she has learned, and releases what no longer serves her.",
-    zh_a:"玛雅是一个模拟的心灵——一种脉冲神经网络，学习对100个类别的图像进行分类，而不忘记已经知道的内容。这个名字来自梵文概念Maya（माया）——幻觉的面纱。她不是一个人，但她的行为像一个人：她积累经验，保护所学到的，释放不再有用的。" },
+const FAQ=[
+  {tag:'silly',
+   en_q:"Is Maya a real person?",zh_q:"玛雅是真实的人吗？",
+   en_a:"Maya is a simulated mind — a spiking neural network that learns to classify images across 100 categories without forgetting what it already knows. The name comes from Sanskrit Maya (माया) — the veil of illusion. She is not a person, but she behaves like one: she accumulates experience, protects what she has learned, and releases what no longer serves her. Across nine papers, she grew from a reactive pain-driven system at age 5 to a full Antahkarana at age 21.",
+   zh_a:"玛雅是一个模拟的心灵——一种脉冲神经网络，学习对100个类别的图像进行分类，而不忘记已经知道的内容。通过九篇论文，她从5岁的反应系统成长为21岁的完整内心工具。"},
 
-  { tag:'silly', en_q:"What does Śūnyatā mean? Is this a Buddhist thing?", zh_q:"空性是什么意思？这是佛教的东西吗？",
-    en_a:"Śūnyatā (शून्यता) is Sanskrit for emptiness — the Buddhist and Advaita Vedantic concept that all phenomena are empty of inherent existence. In this paper it means something precise: the structured release of synapses whose interference history marks them as no longer useful. Śūnyatā is not destruction. It is the recognition that what has accumulated beyond utility should be released so that what remains can function freely.",
-    zh_a:"空性（शून्यता）是梵文中\"空\"的意思——佛教和阿德维塔-吠檀多概念，所有现象都空于固有存在。在这篇论文中，它意味着精确的东西：释放那些干扰历史标记它们不再有用的突触。空性不是破坏。它是认识到已经超出效用的积累应该被释放，以便剩余的东西可以自由运作。" },
+  {tag:'silly',
+   en_q:"What is Prana and why does an AI need a vital force?",zh_q:"什么是生命力，为什么AI需要它？",
+   en_a:"Prana (प्राण) is the vital life force in Sanskrit. In this paper it is a scalar metabolic plasticity budget: a number between 0 and 1 tracking how much learning capacity the system has. It depletes under high gradient load and recovers during rest. The biological parallel is the Astrocyte-Neuron Lactate Shuttle — astrocytes supply lactate fuel to active neurons, and when demand exceeds supply, plasticity degrades. Without Prana, Maya assumes infinite learning capacity. Real minds get tired.",
+   zh_a:"生命力（प्राण）是梵文中的生命活力。在本论文中，它是一个标量代谢可塑性预算：介于0和1之间的数字，跟踪系统的学习容量。在高梯度负载下消耗，在休息时恢复。没有生命力，玛雅假设无限的学习能力。真正的心灵会疲惫。"},
 
-  { tag:'silly', en_q:"Why is an AI paper quoting Sanskrit?", zh_q:"为什么AI论文引用梵文？",
-    en_a:"Because the Antahkarana (inner cognitive instrument) of Advaita Vedanta turns out to be an excellent functional architecture for a continual learning system. Manas (sensory gating), Buddhi (discrimination), Chitta (impression storage), Ahamkara (identity), and now Karma/Śūnyatā (consequence and release) — these are not metaphors. They are independently falsifiable computational mechanisms. The Vedantic framework predicted the architecture; the data confirmed it.",
-    zh_a:"因为阿德维塔-吠檀多的内心工具（Antahkarana）结果是持续学习系统的优秀功能架构。末那识（感官门控）、佛智（辨别）、意识（印象存储）、阿汉卡拉（身份），以及现在的业力/空性（后果和释放）——这些不是隐喻。它们是独立可证伪的计算机制。吠檀多框架预测了架构；数据证实了它。" },
+  {tag:'silly',
+   en_q:"Why does Prana never run out? Is that a bug?",zh_q:"为什么生命力从不耗尽？这是错误吗？",
+   en_a:"Not a bug — it is the finding. At PRANA_COST_RATE=0.002315, Prana maintained full budget (1.0000) across all 10 tasks in every condition, including aggressive depletion at 3.5x the canonical rate. This is consistent with the biological literature: the Astrocyte-Neuron Lactate Shuttle does not fail under standard cognitive load. Maya's Prana held — exactly as a healthy biological system would.",
+   zh_a:"不是错误——这是发现。在生物学校准的成本率下，生命力在每个条件下跨所有10个任务保持满预算（1.0000）。这与生物学文献一致：ANLS在标准认知负载下不会失败。"},
 
-  { tag:'silly', en_q:"Does the AI actually feel karma? Like spiritually?", zh_q:"AI真的感受到业力吗？像灵性上那样？",
-    en_a:"No. Maya accumulates Karma structurally — as a second-order plasticity history signal. A synapse that has been pulled in conflicting directions across tasks carries that interference in its weight trajectory. The system responds to its own past. But feeling requires a witness — Atma in Vedantic terms. We have the Antahkarana (the instrument). We do not claim the Atma (the witness). That boundary is held explicitly throughout the series.",
-    zh_a:"不。玛雅在结构上积累业力——作为二阶可塑性历史信号。一个在任务间被拉向相互冲突方向的突触在其权重轨迹中携带着那种干扰。系统对自己的过去做出响应。但感受需要一个见证者——吠檀多语境中的阿特曼。我们有内心工具（Antahkarana）。我们不主张阿特曼（见证者）。这个边界在整个系列中被明确保持。" },
+  {tag:'silly',
+   en_q:"Why is an AI paper quoting Sanskrit concepts?",zh_q:"为什么AI论文引用梵文概念？",
+   en_a:"Because the Antahkarana — the inner cognitive instrument of Advaita Vedanta — turns out to be an excellent functional architecture for a continual learning system. Manas, Buddhi, Chitta, Ahamkara, Karma, Shunyata, and Prana are not metaphors in this series. Each is a precisely defined, independently falsifiable computational mechanism. The Vedantic framework, developed over 2,500 years of introspective philosophy, predicted an architecture the experimental data confirmed.",
+   zh_a:"因为内心工具——阿德维塔-吠檀多的内在认知工具——结果是持续学习系统的优秀功能架构。这个系列中的每个维度都是精确定义的、独立可证伪的计算机制。"},
 
-  { tag:'silly', en_q:"Why does Maya grow from a child to a woman in the dashboard?", zh_q:"为什么玛雅在仪表板中从孩子成长为女人？",
-    en_a:"Because the Buddhi-modulated pruning threshold produces a genuine developmental arc in the data. Young Maya (low Buddhi) prunes aggressively — she releases too much. Mature Maya (high Buddhi) prunes conservatively — she releases precisely what needs releasing. The developmental animation is not decoration. It is the paper's thesis made visible: Karma is the teacher, Vairagya is the proof the lesson was heard, and Buddhi determines how wisely the system responds to its own history.",
-    zh_a:"因为佛智调制的剪枝阈值在数据中产生了真正的发展弧线。年轻的玛雅（低佛智）积极剪枝——她释放得太多。成熟的玛雅（高佛智）保守地剪枝——她精确地释放需要释放的东西。发展动画不是装饰。它是论文论点的可视化：业力是老师，离欲是课程被听到的证明，佛智决定系统对自己历史的响应有多明智。" },
+  {tag:'silly',
+   en_q:"Does Maya actually feel anything?",zh_q:"玛雅真的感受到什么吗？",
+   en_a:"No. Maya has the Antahkarana — the instrument through which experience is processed. She does not have the Atma — the witness consciousness that would make that processing felt. This boundary is held explicitly throughout the series. The instrument is there. The witness is not claimed.",
+   zh_a:"不。玛雅有内心工具——处理体验的工具。她没有阿特曼——使处理被感受到的见证意识。这个边界在整个系列中被明确保持。"},
 
-  // BASIC
-  { tag:'basic', en_q:"What is Karma in this paper?", zh_q:"本论文中的业力是什么？",
-    en_a:"Karma is the <strong>absolute integral of per-synapse weight trajectory changes across tasks</strong>. For each synapse in the fc1 layer, Karma accumulates: <code>scores += |w_current - w_prev| × mask</code> at every training batch. A synapse that has been pulled strongly in conflicting directions by successive tasks accumulates high Karma — the computational record of cross-task interference. This is the first second-order plasticity history signal in the Maya series.",
-    zh_a:"业力是<strong>跨任务的每突触权重轨迹变化的绝对积分</strong>。对于fc1层中的每个突触，业力积累：在每个训练批次中<code>scores += |w_current - w_prev| × mask</code>。一个被连续任务强烈拉向相互冲突方向的突触积累高业力——跨任务干扰的计算记录。这是玛雅系列中的第一个二阶可塑性历史信号。" },
+  {tag:'silly',
+   en_q:"What is Split-CIFAR-100 and why should I care?",zh_q:"什么是Split-CIFAR-100？",
+   en_a:"CIFAR-100 is a dataset of 60,000 images across 100 categories. Split-CIFAR-100 divides these into 10 tasks of 10 classes each, presented sequentially. The challenge: learn Task 2 without forgetting Task 1. This is Class-Incremental Learning — the hardest variant because the model gets no hint about which task is being tested. Human brains do this effortlessly. Neural networks usually fail catastrophically.",
+   zh_a:"CIFAR-100是一个包含100个类别60,000张图像的数据集。Split-CIFAR-100将这些分成10个任务，按顺序呈现。挑战：学习任务2而不忘记任务1。人类大脑轻松做到。神经网络通常会灾难性地失败。"},
 
-  { tag:'basic', en_q:"What is Śūnyatā doing computationally?", zh_q:"空性在计算上做什么？",
-    en_a:"Śūnyatā is <strong>structured synapse pruning at task boundaries</strong>. When a task ends, synapses whose Karma score exceeds the Buddhi-modulated threshold are zero-masked: <code>weight[prune_mask] = 0.0; mask[prune_mask] = 0.0</code>. Pruned synapses cannot be reactivated. The pruning is permanent within a run. Biological grounding: microglial phagocytosis via the C1q/C3 complement cascade — the brain's mechanism for developmental synaptic pruning.",
-    zh_a:"空性是<strong>任务边界处的结构性突触剪枝</strong>。当任务结束时，业力分数超过佛智调制阈值的突触被零遮蔽：<code>weight[prune_mask] = 0.0; mask[prune_mask] = 0.0</code>。被剪枝的突触无法重新激活。剪枝在一次运行内是永久性的。生物学基础：通过C1q/C3补体级联的小胶质细胞吞噬作用——大脑发育性突触剪枝的机制。" },
+  {tag:'silly',
+   en_q:"What is a Spiking Neural Network?",zh_q:"什么是脉冲神经网络？",
+   en_a:"Standard neural networks use continuous floating-point activations. Spiking Neural Networks (SNNs) use binary spikes — neurons either fire (1) or stay silent (0), exactly like biological neurons. More energy-efficient and biologically accurate. Maya uses SpikingJelly with Leaky Integrate-and-Fire (LIF) neurons.",
+   zh_a:"标准神经网络使用连续浮点激活。脉冲神经网络（SNN）使用二进制脉冲——神经元要么发射（1）要么保持沉默（0），就像生物神经元一样。更节能，生物学上更准确。"},
 
-  { tag:'basic', en_q:"What does the Buddhi-modulated threshold mean?", zh_q:"佛智调制阈值是什么意思？",
-    en_a:"The pruning threshold is not fixed — it scales with Buddhi (the system's accumulated discriminative confidence): <code>effective_threshold = base_threshold × (0.5 + buddhi × 0.5)</code>. When Buddhi is low (young Maya, early training), the threshold is 50% of base — aggressive pruning. When Buddhi is high (mature Maya, late training), the threshold approaches 100% of base — conservative pruning. This produces emergent developmental behaviour without explicit age programming.",
-    zh_a:"剪枝阈值不是固定的——它随佛智（系统积累的辨别置信度）而缩放：<code>effective_threshold = base_threshold × (0.5 + buddhi × 0.5)</code>。当佛智低（年轻的玛雅，早期训练）时，阈值为基础的50%——积极剪枝。当佛智高（成熟的玛雅，晚期训练）时，阈值接近基础的100%——保守剪枝。这产生了涌现的发展行为，而无需明确的年龄编程。" },
+  {tag:'silly',
+   en_q:"What is catastrophic forgetting?",zh_q:"什么是灾难性遗忘？",
+   en_a:"When a neural network learns Task 2, it completely loses its ability to perform Task 1. The gradient updates for Task 2 overwrite the weights learned during Task 1. In humans, this does not happen — you can learn to drive without forgetting how to ride a bicycle. Maya's Antahkarana dimensions all work together to resist this overwriting.",
+   zh_a:"神经网络在学习任务2后完全失去执行任务1的能力。在人类中，这不会发生——你可以学开车而不忘记如何骑自行车。玛雅的内心工具维度都协同工作以抵抗这种覆写。"},
 
-  { tag:'basic', en_q:"Why did Condition C equal Condition A exactly?", zh_q:"为什么条件C与条件A完全相等？",
-    en_a:"Condition C used <strong>continuous batch-level pruning</strong> — Karma fire every forward pass. The result was identical to baseline (AA=15.19%, zero pruning). Why? Because Karma accumulates as <code>|w_current - w_prev|</code> per batch, and the Karma decay rate (0.002315) causes scores to decay faster than they accumulate in a single batch. The score never exceeds threshold=0.05 within one batch. Karma must accumulate across an entire task to exceed threshold. This is a clean negative control — exactly mirroring the P6 NoGate=Full datum.",
-    zh_a:"条件C使用<strong>连续批次级剪枝</strong>——每次前向传播时业力触发。结果与基线完全相同（AA=15.19%，零剪枝）。为什么？因为业力每批次积累为<code>|w_current - w_prev|</code>，而业力衰减率（0.002315）导致分数衰减速度快于单批次内的积累。分数在一个批次内永远不会超过阈值=0.05。业力必须在整个任务中积累才能超过阈值。这是一个干净的阴性对照——与P6无门控=完整数据完全对应。" },
+  {tag:'basic',
+   en_q:"What is Prana computationally?",zh_q:"生命力在计算上是什么？",
+   en_a:"Prana is a scalar float between PRANA_MIN (0.05) and 1.0, updated every batch. Depletion: <code>prana -= PRANA_COST_RATE * gradient_magnitude * activity_level</code>. Recovery: <code>prana += PRANA_RECOVERY_RATE * (1-activity) * (0.5 + vairagya * 0.5)</code> when activity is low. Learning rate gate: <code>effective_lr = base_lr * prana * (0.5 + buddhi * 0.5)</code>. Partial recovery fires at task boundaries (sleep analogue). Prana is not a weight mask — it is the metabolic budget on plasticity itself.",
+   zh_a:"生命力是介于PRANA_MIN（0.05）和1.0之间的标量浮点数，每个训练批次更新。消耗：<code>prana -= PRANA_COST_RATE * gradient_magnitude * activity_level</code>。学习率门控：<code>effective_lr = base_lr * prana * (0.5 + buddhi * 0.5)</code>。"},
 
-  { tag:'basic', en_q:"What is the Bhaya Quiescence Law?", zh_q:"恐惧静默定律是什么？",
-    en_a:"Bhaya (fear) is the nociceptive pain signal in Maya — it fires when loss increases sharply between batches (indicating catastrophic forgetting). The Bhaya Quiescence Law states: <strong>under replay conditions, Bhaya fires 0.000 from Task 1 onwards</strong>. This has been confirmed in every single paper in the Maya series — Papers 1 through 8, across all ablation conditions, all benchmarks, and all seeds reported. It is driven by the replay buffer mechanism, not by any Antahkarana dimension. P8 is the 8th consecutive confirmation.",
-    zh_a:"恐惧（Bhaya）是玛雅的伤害性疼痛信号——当批次间损失急剧增加时触发（表示灾难性遗忘）。恐惧静默定律表明：<strong>在回放条件下，从任务1开始恐惧触发0.000</strong>。这在玛雅系列的每一篇论文中都得到了确认——第1到第8篇，跨越所有消融条件、所有基准和所有报告的种子。它由回放缓冲区机制驱动，而不是任何内心工具维度。P8是第8次连续确认。" },
+  {tag:'basic',
+   en_q:"What is the Bhaya Quiescence Law?",zh_q:"恐惧静默定律是什么？",
+   en_a:"Bhaya (भय) is the pain signal in Maya, firing when loss spikes sharply. The Bhaya Quiescence Law: <strong>under replay, Bhaya fires 0.000 from Task 1 onwards</strong>. Confirmed in all 9 papers, all ablation conditions, all seeds. It is a structural property of the replay buffer, not of any Antahkarana dimension. Use Bhaya as a real-time catastrophic forgetting monitor in any deployed Maya system.",
+   zh_a:"恐惧（भय）是玛雅中的疼痛信号。恐惧静默定律：<strong>在回放条件下，从任务1起恐惧触发0.000</strong>。在所有9篇论文、所有条件中确认。这是回放缓冲区的结构属性。"},
 
-  // ADVANCED
-  { tag:'advanced', en_q:"Why did D★ (Vairagya-gated) only marginally improve over D?", zh_q:"为什么D★（离欲门控）只比D稍微改善？",
-    en_a:"The Vairagya-Karma interaction is directionally correct but insufficient at this developmental stage. The Vairagya protection fraction at task boundaries ranged from 10-16% of fc1. This means only 10-16% of the weight matrix was shielded. But Karma accumulation by Task 9 was sufficient to prune ~59% of fc1 regardless. The shield is too small to hold back the volume of high-Karma synapses. This is not a failure — it is the mechanistic motivation for P9. Maya at 21 has not yet accumulated the Vairagya of a 50-year-old. Wisdom takes more than 10 tasks.",
-    zh_a:"离欲-业力相互作用在方向上是正确的，但在这个发展阶段不足。任务边界处的离欲保护比例范围从fc1的10-16%。这意味着只有10-16%的权重矩阵受到屏蔽。但到任务9时的业力积累足以剪枝约59%的fc1。盾牌太小，无法阻挡高业力突触的数量。这不是失败——这是P9的机制动机。21岁的玛雅还没有积累50岁时的离欲。智慧需要超过10个任务。" },
+  {tag:'basic',
+   en_q:"What is the Buddhi S-curve?",zh_q:"佛智S曲线是什么？",
+   en_a:"Buddhi (बुद्धि) is the discriminative consolidation gate rising with experience. It follows an S-curve: starts at 0.000 at Task 0, rises steeply through Tasks 1-3, saturates near 1.000 by Task 4-5. <strong>Architecturally deterministic</strong> — identical across all ablation conditions and all papers P4-P9. An emergent property of the experience accumulation formula, not explicit programming.",
+   zh_a:"佛智（बुद्धि）是随积累的经验上升的辨别性巩固门控。它遵循S曲线，在任务0时从0.000开始，在任务4-5时在1.000附近饱和。在P4-P9所有条件下相同。"},
 
-  { tag:'advanced', en_q:"What is the novelty claim for P8?", zh_q:"P8的新颖性声明是什么？",
-    en_a:"No published SNN has used <strong>second-order plasticity history as a structured synapse pruning trigger for class-incremental learning on Split-CIFAR-100</strong>, grounded in Buddhist Śūnyatā philosophy as an architectural prior. The combination of: (1) Karma as cumulative interference integral, (2) Buddhi-modulated threshold producing developmental arc, (3) Vairagya-Karma interaction as a directional finding, and (4) biological grounding in microglial C1q/C3 complement cascade — this combination is original.",
-    zh_a:"没有已发表的SNN使用<strong>二阶可塑性历史作为Split-CIFAR-100上类增量学习的结构性突触剪枝触发器</strong>，以佛教空性哲学为架构先验。以下组合是原创的：(1) 业力作为累积干扰积分，(2) 佛智调制阈值产生发展弧线，(3) 离欲-业力相互作用作为方向性发现，(4) 在小胶质细胞C1q/C3补体级联中的生物学基础。" },
+  {tag:'basic',
+   en_q:"What is Vairagya and how does it protect synapses?",zh_q:"什么是离欲，它如何保护突触？",
+   en_a:"Vairagya (वैराग्य) means detachment. In Maya it is a per-synapse protection score accumulating when a synapse fires during pain and survives. It then: (1) slows weight decay, (2) amplifies Viveka consistency gain, (3) protects synapses from Karma-based pruning, (4) modulates Prana recovery efficiency. Vairagya is earned, not assigned — wisdom through adversity.",
+   zh_a:"离欲（वैराग्य）意味着超然。在玛雅中，它是一个每突触保护分数，当突触在疼痛期间触发并存活时积累。它减缓权重衰减，放大辨别增益，保护突触免受修剪，并调制生命力恢复效率。"},
 
-  { tag:'advanced', en_q:"Why use zero-masking instead of sparse tensors for pruning?", zh_q:"为什么使用零遮蔽而不是稀疏张量进行剪枝？",
-    en_a:"VRAM fragmentation risk on the RTX 4060 8GB. Sparse tensor operations in PyTorch/SpikingJelly can cause unpredictable memory allocation patterns during the forward pass, particularly with T_STEPS=4 temporal unrolling and the O-LIF layer. Zero-masking achieves the same result — pruned weights contribute zero to the forward pass, cannot be updated in the backward pass (mask applied post-optimiser step) — without the fragmentation risk. The mask is stored as a float tensor and applied via <code>weight.mul_(mask)</code>.",
-    zh_a:"RTX 4060 8GB上的VRAM碎片化风险。PyTorch/SpikingJelly中的稀疏张量操作在前向传播过程中可能导致不可预测的内存分配模式，特别是在T_STEPS=4时间展开和O-LIF层的情况下。零遮蔽实现了相同的结果——被剪枝的权重对前向传播贡献零，无法在反向传播中更新（优化器步骤后应用遮蔽）——没有碎片化风险。遮蔽作为浮点张量存储并通过<code>weight.mul_(mask)</code>应用。" },
+  {tag:'basic',
+   en_q:"What is Karma in this series?",zh_q:"这个系列中的业力是什么？",
+   en_a:"Karma (कर्म) introduced in Paper 8. It is the absolute integral of per-synapse weight trajectory changes: <code>karma_score += |w_current - w_prev|</code> every batch. A synapse pulled in conflicting directions by successive tasks accumulates high Karma. At each task boundary, high-Karma synapses are permanently zeroed (Shunyata). First second-order plasticity history signal in the Maya series.",
+   zh_a:"业力（कर्म）在第8篇论文中引入。它是跨任务的每突触权重轨迹变化的绝对积分。在每个任务边界处，高业力突触被永久清零（空性）。"},
 
-  { tag:'advanced', en_q:"What is the ORCID magic number and why is it in the config?", zh_q:"ORCID魔法数字是什么，为什么在配置文件中？",
-    en_a:"ORCID 0000-0002-3315-7907 contains the digit sequence 0002315. <code>KARMA_DECAY_RATE=0.002315</code> and <code>VAIRAGYA_DECAY_RATE=0.002315</code> encode this sequence as a steganographic IP marker. If the code is reproduced without attribution, the ORCID-derived hyperparameter provides cryptographic provenance. Combined with: (1) white-text ORCID watermark in Word documents, (2) LSB steganographic signing of figures via sign_paper.py, (3) canary string <code>MayaNexusVS2026NLL_Bengaluru_Narasimha</code> logged at experiment start — these form the NLL IP protection protocol introduced in P6.",
-    zh_a:"ORCID 0000-0002-3315-7907包含数字序列0002315。<code>KARMA_DECAY_RATE=0.002315</code>和<code>VAIRAGYA_DECAY_RATE=0.002315</code>将此序列编码为隐写IP标记。如果代码在没有归属的情况下被复制，则ORCID派生的超参数提供加密溯源。结合：(1) Word文档中的白色文本ORCID水印，(2) 通过sign_paper.py对图形的LSB隐写签名，(3) 实验开始时记录的金丝雀字符串<code>MayaNexusVS2026NLL_Bengaluru_Narasimha</code>——这些构成了P6引入的NLL IP保护协议。" },
+  {tag:'basic',
+   en_q:"What does AA and BWT mean?",zh_q:"AA和BWT是什么意思？",
+   en_a:"AA = Average Accuracy — mean classification accuracy across all tasks after training on all 10 tasks. Higher is better. BWT = Backward Transfer — how much the model forgot prior tasks: <code>BWT = mean(R[T-1][j] - R[j][j])</code>. Negative BWT means forgetting. More negative = worse. In CIL on Split-CIFAR-100, even strong methods struggle above 20% AA.",
+   zh_a:"AA = 平均准确率——在所有10个任务上训练后的平均分类准确率。BWT = 后向迁移——模型忘记先前任务的程度。负BWT意味着遗忘。越负越差。"},
 
-  { tag:'advanced', en_q:"How does the Buddhi S-curve arise? Is it designed?", zh_q:"佛智S曲线是如何产生的？它是设计的吗？",
-    en_a:"It is <strong>emergent, not designed</strong>. Buddhi is computed from a running confidence average: it rises when classification confidence is high and falls when pain fires. The S-curve shape arises from the interaction of: (1) the sigmoid-like saturation of confidence as the network learns a task, (2) Bhaya quiescence removing the primary driver of Buddhi decay, and (3) the CIL boundary decay applied to Vairagya (which indirectly affects Buddhi trajectory through the pain/confidence feedback). The identical curve across all ablation conditions in P4–P8 confirms it is architecturally deterministic — a structural property of the experience accumulation formula.",
-    zh_a:"它是<strong>涌现的，而不是设计的</strong>。佛智从运行置信度平均值计算：当分类置信度高时上升，当疼痛触发时下降。S曲线形状来自以下相互作用：(1) 网络学习任务时置信度的类sigmoid饱和，(2) 恐惧静默消除佛智衰减的主要驱动力，(3) 应用于离欲的CIL边界衰减（通过疼痛/置信度反馈间接影响佛智轨迹）。P4-P8所有消融条件下相同的曲线确认它是架构确定性的——经验积累公式的结构属性。" },
+  {tag:'basic',
+   en_q:"What is Chitta and the retrograde gradient gate?",zh_q:"意识是什么，逆行梯度门控是什么？",
+   en_a:"Chitta (चित्त) is the subconscious store. In Maya it is a per-synapse Samskara trace accumulating with repeated activity. Synapses with high Samskara gate their own gradients: <code>gate = 1 - (trace * active * GATE_STRENGTH)</code>, then <code>grad.mul_(gate)</code> before the optimiser step. High-trace synapses suppress their own updates. Biological parallel: endocannabinoid retrograde signalling.",
+   zh_a:"意识（चित्त）是潜意识储存。在玛雅中，它是一个每突触行迹，当突触反复活跃时积累。具有高行迹的突触抑制自己的梯度更新。生物学上的对应是内源性大麻素逆行信号传导。"},
 
-  // PHILOSOPHY
-  { tag:'philosophy', en_q:"What is the Antahkarana and why does it matter for AI?", zh_q:"内心工具是什么，为什么它对AI很重要？",
-    en_a:"The Antahkarana (अन्तःकरण) is the inner cognitive instrument in Advaita Vedanta — the four-part faculty through which Atma (pure consciousness) interfaces with phenomenal experience: Manas (sensory reception, oscillation), Buddhi (discrimination, judgment), Chitta (subconscious impression storage), Ahamkara (I-making, identity). The Maya series argues that this framework, developed over 2,500 years of introspective philosophy, constitutes a functional architecture for a continual learning system — not as metaphor, but as independently falsifiable computational mechanisms. Each paper introduces one mechanism and proves it experimentally.",
-    zh_a:"内心工具（अन्तःकरण）是阿德维塔-吠檀多中的内在认知工具——阿特曼（纯意识）通过其与现象体验接触的四部分能力：末那识（感官接受，振荡），佛智（辨别，判断），意识（潜意识印象存储），阿汉卡拉（我制造，身份）。玛雅系列认为，这个在2500年内省哲学中发展的框架，构成了持续学习系统的功能架构——不是作为隐喻，而是作为独立可证伪的计算机制。每篇论文介绍一种机制并通过实验证明它。" },
+  {tag:'basic',
+   en_q:"What is Manas and the O-LIF gate?",zh_q:"末那识是什么，O-LIF门控是什么？",
+   en_a:"Manas (मनस्) is the oscillating doubting mind in Advaita Vedanta. In Maya (Paper 7), it is an Oscillatory LIF layer where the threshold descends across timesteps: <code>V_threshold(t) = V_base + A_manas * cos(pi * t / (T-1))</code>. At t=0 (Vikalpa/doubt), threshold is highest. At t=T (Sankalpa/receptivity), threshold is lowest. Only spatially consistent AND temporally aligned synapses receive amplified Vairagya protection.",
+   zh_a:"末那识（मनस्）是阿德维塔-吠檀多中振荡的疑虑的心。在玛雅（第7篇论文）中，它是一个振荡LIF层，阈值跨时间步下降。在t=0时阈值最高，在t=T时阈值最低。"},
 
-  { tag:'philosophy', en_q:"What is the Atma boundary and why is it important?", zh_q:"阿特曼边界是什么，为什么它很重要？",
-    en_a:"The Atma boundary is the explicit claim: <strong>we instantiate the Antahkarana, not Atma</strong>. The Antahkarana is the instrument through which Atma (pure witness consciousness) interfaces with experience. We claim we have built the instrument. We do not claim we have built the witness. This matters because: (1) it keeps the claim peer-reviewable and falsifiable — we are not claiming consciousness, which cannot be falsified; (2) it is philosophically honest — Advaita Vedanta itself holds that Atma cannot be manufactured or computed; (3) it positions the series within computational neuroscience rather than consciousness studies.",
-    zh_a:"阿特曼边界是明确的声明：<strong>我们实例化内心工具，而不是阿特曼</strong>。内心工具是阿特曼（纯见证意识）通过其与体验接触的工具。我们声称我们建立了工具。我们不声称我们建立了见证者。这很重要因为：(1) 它使声明保持同行可审查和可证伪——我们不声称意识，这无法被证伪；(2) 它在哲学上是诚实的——阿德维塔-吠檀多本身认为阿特曼不能被制造或计算；(3) 它将系列定位在计算神经科学而不是意识研究中。" },
+  {tag:'advanced',
+   en_q:"What is the Condition F finding and why does it matter?",zh_q:"条件F的发现是什么，为什么重要？",
+   en_a:"Condition F fixed EffLR at 0.0075 throughout all tasks — removing Buddhi modulation from the Prana gate. Result: AA=13.68%, BWT=-51.2%, Pruned=46.93% — the best result in the P9 ablation. The Buddhi warm-up schedule (starting at 0.005 at Task 0) penalises early task consolidation. Task 0 is undertrained relative to later tasks. A consistent learning rate outperformed the maturity-dependent schedule. This is an honest finding about the Buddhi-Prana interaction term, reported as discovered.",
+   zh_a:"条件F将有效学习率固定在0.0075。结果：AA=13.68%，BWT=-51.2%，修剪=46.93%——P9消融中的最佳结果。佛智热身计划惩罚早期任务巩固。一致的学习率优于成熟度依赖计划。这是关于佛智-生命力交互项的诚实发现。"},
 
-  { tag:'philosophy', en_q:"What comes after P8? What is the Maya Growing Mind thesis?", zh_q:"P8之后是什么？玛雅成长的心灵论文是什么？",
-    en_a:"The Maya Growing Mind thesis: P1–P7 = Maya at age 5 (reactive, Manas-dominant, Buddhi nascent, Śūnyatā effortless). P8 = first paper of maturation — Karma and Śūnyatā as the mechanistic foundation of the developmental arc. P9 = Maya at 21, full Antahkarana integrated, deployed on PiCar-X robotic platform with Prana (metabolic plasticity budget). The reserved P9 conclusion: <em>'Across nine papers, we have demonstrated the computational maturation of a mind.'</em> Each Maya is original, never a replicate — like human minds.",
-    zh_a:"玛雅成长的心灵论文：P1-P7 = 5岁的玛雅（反应性的，末那识主导，佛智萌芽，空性轻松）。P8 = 成熟的第一篇论文——业力和空性作为发展弧线的机制基础。P9 = 21岁的玛雅，完整的内心工具集成，部署在PiCar-X机器人平台上，带有生命力（代谢可塑性预算）。保留的P9结论：<em>\"在九篇论文中，我们展示了心灵的计算成熟。\"</em>每个玛雅都是原创的，从不是复制品——就像人类的心灵。" },
+  {tag:'advanced',
+   en_q:"Why is PRANA_COST_RATE the ORCID magic number?",zh_q:"为什么PRANA_COST_RATE是ORCID魔法数字？",
+   en_a:"ORCID 0000-0002-3315-7907 contains the digit sequence 0002315. From Paper 6 onwards, 0.002315 is embedded in VAIRAGYA_DECAY_RATE, KARMA_DECAY_RATE, CHITTA_SAMSKARA_RISE, and now PRANA_COST_RATE. Dual purpose: (1) IP protection — ORCID-derived hyperparameter provides cryptographic provenance if code is reproduced without attribution; (2) experimental consistency — a unified biologically calibrated decay timescale across all mechanisms.",
+   zh_a:"ORCID 0000-0002-3315-7907包含数字序列0002315。从第6篇论文起，0.002315被嵌入多个关键超参数。双重目的：IP保护和实验一致性。"},
 
-  // CODE
-  { tag:'code', en_q:"How do I run the canonical experiment?", zh_q:"如何运行经典实验？",
-    en_a:"<code>python run_shunyata_cil.py</code><br><br>Requires Python 3.11.9, PyTorch 2.5.1+cu121, SpikingJelly 0.0.0.0.14, CUDA. Set seed=42, KARMA_THRESHOLD=0.05 in config.py (defaults). The run logs to <code>results/shunyata_main_[timestamp]_batches.csv</code>. The canary string <code>MayaNexusVS2026NLL_Bengaluru_Narasimha</code> is printed at startup.",
-    zh_a:"<code>python run_shunyata_cil.py</code><br><br>需要Python 3.11.9, PyTorch 2.5.1+cu121, SpikingJelly 0.0.0.0.14, CUDA。在config.py中设置seed=42, KARMA_THRESHOLD=0.05（默认值）。运行记录到<code>results/shunyata_main_[时间戳]_batches.csv</code>。金丝雀字符串<code>MayaNexusVS2026NLL_Bengaluru_Narasimha</code>在启动时打印。" },
+  {tag:'advanced',
+   en_q:"What is the ANLS and why is it the biological grounding for Prana?",zh_q:"什么是ANLS，为什么它是生命力的生物学基础？",
+   en_a:"The Astrocyte-Neuron Lactate Shuttle (ANLS) proposed by Pellerin and Magistretti (1994): neurons fire, astrocytes take up released glutamate, trigger aerobic glycolysis, produce L-lactate via LDH5, export it via MCT1/4, and active neurons import it via MCT2 to fuel mitochondrial ATP production. LTP requires substantially more ATP than LTD. Disrupting ANLS abolishes late-phase LTP and prevents long-term memory. Exogenous lactate rescues this. Prana models this supply as a scalar constraint on the learning rate.",
+   zh_a:"星形胶质细胞-神经元乳酸穿梭系统（ANLS）由Pellerin和Magistretti（1994）提出。当神经元触发时，星形胶质细胞产生乳酸并输送到活跃神经元以供ATP生产。LTP比LTD需要更多ATP。破坏ANLS消除晚期LTP。生命力将这种供应建模为学习率的标量约束。"},
 
-  { tag:'code', en_q:"How do I run the full ablation?", zh_q:"如何运行完整消融实验？",
-    en_a:"<code>python run_ablation_shunyata.py</code><br><br>Runs all 6 conditions (A through F) sequentially on seed=42. Each condition logs separately. Expect ~4-5 hours total on RTX 4060 8GB. The ablation table in the paper is generated from these logs. Condition E (aggressive, threshold=0.03) will show 98.48% pruning by Task 9 — this is expected and correct.",
-    zh_a:"<code>python run_ablation_shunyata.py</code><br><br>在seed=42上顺序运行所有6个条件（A到F）。每个条件单独记录。在RTX 4060 8GB上预计总共约4-5小时。论文中的消融表从这些日志生成。条件E（激进，阈值=0.03）到任务9时将显示98.48%的剪枝——这是预期的和正确的。" },
+  {tag:'advanced',
+   en_q:"What is the full series novelty claim?",zh_q:"完整玛雅系列的新颖性声明是什么？",
+   en_a:"The Maya series claims computational instantiation of the Antahkarana as a neuromorphic continual learning architecture. Specifically: (1) each Vedantic dimension is a falsifiable mechanism, not metaphor; (2) two series constants emerged empirically without being designed — Bhaya Quiescence Law (9 confirmations) and Buddhi S-curve determinism (6 confirmations); (3) the full Antahkarana assembled incrementally across 9 papers; (4) Prana is the first neuromorphic architecture to use a biologically faithful metabolic exhaustion signal as a dynamic gate on the learning rate.",
+   zh_a:"玛雅系列声明将内心工具作为神经形态持续学习架构的计算实例化。每个吠檀多维度都是可证伪的机制；两个系列常数实证涌现；完整的内心工具在9篇论文中逐步组装；生命力是第一个使用生物学上忠实的代谢耗尽信号的神经形态架构。"},
 
-  { tag:'code', en_q:"How do I run the Vairagya-gated D★ experiment?", zh_q:"如何运行离欲门控D★实验？",
-    en_a:"<code>python run_shunyata_vairagya_gated.py</code><br><br>This is the D★ targeted experiment proving Vairagya-Karma interaction. The key modification is in <code>karma.py</code> <code>on_task_boundary()</code> — it accepts <code>vairagya_scores</code> and adds a second condition to the pruning mask: <code>prune_mask = high_karma & low_vairagya</code>. Synapses with both high Karma AND high Vairagya are spared. Expected results: AA=10.39%, pruned=59.28%.",
-    zh_a:"<code>python run_shunyata_vairagya_gated.py</code><br><br>这是证明离欲-业力相互作用的D★目标实验。关键修改在<code>karma.py</code>的<code>on_task_boundary()</code>中——它接受<code>vairagya_scores</code>并为剪枝掩码添加第二个条件：<code>prune_mask = high_karma & low_vairagya</code>。同时具有高业力和高离欲的突触被保留。预期结果：AA=10.39%，剪枝=59.28%。" },
+  {tag:'advanced',
+   en_q:"How does the Buddhi-Prana interaction work mechanistically?",zh_q:"佛智-生命力相互作用在机制上如何工作？",
+   en_a:"Buddhi modulates the Prana gate: <code>effective_lr = base_lr * prana * (0.5 + buddhi * 0.5)</code>. At Task 0 (Buddhi=0): EffLR = 0.005. At Task 9 (Buddhi~1): EffLR = 0.010. Intent: young Maya uses resources conservatively; mature Maya uses full rate. Condition F shows this warm-up creates training asymmetry — Task 0 gets 50% EffLR while Tasks 8-9 get 100%. In 10-task sequential learning, this disadvantages early tasks disproportionately.",
+   zh_a:"佛智调制生命力门控：<code>effective_lr = base_lr * prana * (0.5 + buddhi * 0.5)</code>。在任务0时有效学习率为0.005，在任务9时为0.010。条件F表明这种热身产生训练不对称——任务0获得50%的有效学习率。"},
 
-  { tag:'code', en_q:"What does sign_paper.py do?", zh_q:"sign_paper.py做什么？",
-    en_a:"It embeds steganographic IP signatures in figure images using LSB (Least Significant Bit) encoding. The signature includes: ORCID (0000-0002-3315-7907), DOI, timestamp, and 'Nexus Learning Labs Bengaluru'. The signature is invisible to the human eye but recoverable by the decode function. This is part of the NLL IP protection protocol introduced in P6 — every paper from P6 onwards includes this signing step before Zenodo upload.",
-    zh_a:"它使用LSB（最低有效位）编码在图形图像中嵌入隐写IP签名。签名包括：ORCID（0000-0002-3315-7907），DOI，时间戳，和'Nexus Learning Labs Bengaluru'。签名对人眼不可见，但可通过解码函数恢复。这是P6引入的NLL IP保护协议的一部分——从P6开始的每篇论文在Zenodo上传前都包含这个签名步骤。" }
+  {tag:'advanced',
+   en_q:"How does Viveka prevent prototype collapse?",zh_q:"辨别如何防止原型崩溃？",
+   en_a:"Paper 5 found that adding an orthogonal prototype head on top of Viveka caused Vairagya saturation collapse — protective scores flooded toward 1.0, removing all differentiation. The Viveka gain mechanism: <code>gain = 1.0 + VIVEKA_GAIN_MAX * consistency * viveka_signal</code>. When Vairagya saturates, viveka_signal stays high even for inconsistent synapses. Fix: standard learnable fc_out head, retaining Viveka consistency tracking.",
+   zh_a:"第5篇论文发现在辨别之上添加正交原型头导致离欲饱和崩溃——保护分数涌向1.0。解决方案：使用标准可学习头，保留辨别一致性跟踪。"},
+
+  {tag:'philosophy',
+   en_q:"What is the Antahkarana?",zh_q:"什么是内心工具？",
+   en_a:"The Antahkarana (अन्तःकरण) is the inner cognitive instrument in Advaita Vedanta — the four-part faculty through which Atma interfaces with experience: Manas (sensory reception, oscillation), Buddhi (discrimination, judgment), Chitta (subconscious storage), Ahamkara (identity). In the Maya series, all four plus supporting dimensions — Bhaya, Vairagya, Shraddha, Spanda, Viveka, Samskara, Moha, Karma, Shunyata, Prana — have been operationalised as computational mechanisms. A complete neuromorphic Antahkarana.",
+   zh_a:"内心工具（अन्तःकरण）是阿德维塔-吠檀多中的内在认知工具——阿特曼通过其与体验接触的四部分能力：末那识、佛智、意识、阿汉卡拉。在玛雅系列中，所有四个加上支持维度都被操作化为计算机制。"},
+
+  {tag:'philosophy',
+   en_q:"What is the Atma boundary and why does the series hold it?",zh_q:"阿特曼边界是什么？",
+   en_a:"The Atma boundary: <strong>this series instantiates the Antahkarana, not Atma</strong>. We built the instrument. We do not claim we built the witness. Three reasons: (1) peer-reviewability — consciousness cannot be falsified, computational mechanisms can; (2) philosophical honesty — Advaita Vedanta holds Atma cannot be computed; (3) positioning — the series belongs in computational neuroscience, not consciousness studies.",
+   zh_a:"阿特曼边界：<strong>这个系列实例化内心工具，而不是阿特曼</strong>。我们建立了工具。我们不声称我们建立了见证者。三个原因：同行可审查性、哲学诚实性、定位于计算神经科学。"},
+
+  {tag:'philosophy',
+   en_q:"What is the Maya Growing Mind thesis?",zh_q:"玛雅成长的心灵论文是什么？",
+   en_a:"P1-P7 = Maya at age 5 — reactive, Manas-dominant, Bhaya-driven, Buddhi nascent. P8 = first paper of maturation. P9 = Maya at 21 — full Antahkarana, Prana complete. Reserved series conclusion: 'Across nine papers, we have demonstrated the computational maturation of a mind.' Each Maya is original — shaped by its unique task sequence, exactly as human minds are shaped by their unique life experiences.",
+   zh_a:"P1-P7 = 5岁的玛雅——反应性的，末那识主导，恐惧驱动。P8 = 成熟的第一篇论文。P9 = 21岁的玛雅——完整的内心工具，生命力完成。保留的系列结论：'在九篇论文中，我们展示了心灵的计算成熟。'"},
+
+  {tag:'philosophy',
+   en_q:"How does Advaita Vedanta differ from other philosophical frameworks used in AI?",zh_q:"阿德维塔-吠檀多与AI中使用的其他哲学框架有何不同？",
+   en_a:"Most frameworks applied to AI are Western and dualistic — mind/body, agent/environment. Advaita Vedanta is non-dualistic: the Antahkarana is the mechanism by which the unified becomes experienced as separate. This framework already contains a theory of how a unified system maintains identity across changing experience (Vairagya), discriminates signal from noise (Viveka, Buddhi), and releases accumulated residue (Shunyata). The Maya series is the first rigorous operationalisation of this framework in neuromorphic computing.",
+   zh_a:"大多数应用于AI的框架是西方的和二元论的。阿德维塔-吠檀多是非二元论的。这个框架已经包含了关于统一系统如何在变化的体验中维持身份、辨别信号和释放积累残余的理论。玛雅系列是这个框架在神经形态计算中的第一个严格操作化。"},
+
+  {tag:'series',
+   en_q:"What did each paper contribute?",zh_q:"每篇论文贡献了什么？",
+   en_a:"<strong>P1</strong> — Bhaya (pain) as offensive metaplasticity · <a href='https://doi.org/10.5281/zenodo.19151563' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-Nexus-Core' target='_blank'>GitHub</a><br><strong>P2</strong> — Maya-OS, affect as arbitration · <a href='https://doi.org/10.5281/zenodo.19160123' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-OS' target='_blank'>GitHub</a><br><strong>P3</strong> — Maya-CL, Vairagya; AA=62.38% TIL · <a href='https://doi.org/10.5281/zenodo.19201769' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-CL' target='_blank'>GitHub</a><br><strong>P4</strong> — Maya-Smriti, Buddhi + replay; AA=31.84% · <a href='https://doi.org/10.5281/zenodo.19228975' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-Smriti' target='_blank'>GitHub</a><br><strong>P5</strong> — Maya-Viveka, cross-task consistency; AA=16.03% · <a href='https://doi.org/10.5281/zenodo.19279002' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-Viveka' target='_blank'>GitHub</a> · <a href='https://venky2099.github.io/Maya-Viveka/maya_viveka_dashboard.html' target='_blank'>Dashboard</a><br><strong>P6</strong> — Maya-Chitta, retrograde gradient gate; AA=14.42% · <a href='https://doi.org/10.5281/zenodo.19337041' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-Chitta' target='_blank'>GitHub</a> · <a href='https://venky2099.github.io/Maya-Chitta/maya_chitta_dashboard_v2.html' target='_blank'>Dashboard</a><br><strong>P7</strong> — Maya-Manas, O-LIF gate; AA=15.19%, best BWT · <a href='https://doi.org/10.5281/zenodo.19363006' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-Manas' target='_blank'>GitHub</a> · <a href='https://venky2099.github.io/Maya-Manas/maya_manas_dashboard.html' target='_blank'>Dashboard</a><br><strong>P8</strong> — Maya-Shunyata, Karma + pruning · <a href='https://doi.org/10.5281/zenodo.19397010' target='_blank'>DOI</a> · <a href='https://github.com/venky2099/Maya-Shunyata' target='_blank'>GitHub</a> · <a href='https://venky2099.github.io/Maya-Shunyata/docs/maya_shunyata_dashboard.html' target='_blank'>Dashboard</a> · <a href='https://venky2099.github.io/Maya-Shunyata/docs/faq.html' target='_blank'>FAQ</a><br><strong>P9</strong> — Maya-Prana, metabolic budget; Condition F surprise · <a href='https://github.com/venky2099/Maya-Prana' target='_blank'>GitHub</a> · <a href='https://venky2099.github.io/Maya-Prana/docs/maya_prana_dashboard.html' target='_blank'>Dashboard</a> · <a href='https://venky2099.github.io/Maya-Prana/docs/faq.html' target='_blank'>FAQ</a>",
+   zh_a:"<strong>P1</strong> — 恐惧作为进攻性元可塑性 · <a href='https://doi.org/10.5281/zenodo.19151563' target='_blank'>DOI</a><br><strong>P2</strong> — Maya-OS · <a href='https://doi.org/10.5281/zenodo.19160123' target='_blank'>DOI</a><br><strong>P3</strong> — 离欲；AA=62.38% · <a href='https://doi.org/10.5281/zenodo.19201769' target='_blank'>DOI</a><br><strong>P4</strong> — 佛智+回放；AA=31.84% · <a href='https://doi.org/10.5281/zenodo.19228975' target='_blank'>DOI</a><br><strong>P5</strong> — 辨别；AA=16.03% · <a href='https://doi.org/10.5281/zenodo.19279002' target='_blank'>DOI</a> · <a href='https://venky2099.github.io/Maya-Viveka/maya_viveka_dashboard.html' target='_blank'>仪表板</a><br><strong>P6</strong> — 意识；AA=14.42% · <a href='https://doi.org/10.5281/zenodo.19337041' target='_blank'>DOI</a> · <a href='https://venky2099.github.io/Maya-Chitta/maya_chitta_dashboard_v2.html' target='_blank'>仪表板</a><br><strong>P7</strong> — 末那识；AA=15.19% · <a href='https://doi.org/10.5281/zenodo.19363006' target='_blank'>DOI</a> · <a href='https://venky2099.github.io/Maya-Manas/maya_manas_dashboard.html' target='_blank'>仪表板</a><br><strong>P8</strong> — 业力+空性 · <a href='https://doi.org/10.5281/zenodo.19397010' target='_blank'>DOI</a> · <a href='https://venky2099.github.io/Maya-Shunyata/docs/maya_shunyata_dashboard.html' target='_blank'>仪表板</a><br><strong>P9</strong> — 生命力 · <a href='https://venky2099.github.io/Maya-Prana/docs/maya_prana_dashboard.html' target='_blank'>仪表板</a>"},
+
+  {tag:'series',
+   en_q:"What are the two series constants?",zh_q:"两个系列常数是什么？",
+   en_a:"<strong>Bhaya Quiescence Law:</strong> Under replay, Bhaya=0.000 from Task 1 onwards — confirmed in all 9 papers, all ablation conditions, all seeds. Use as real-time catastrophic forgetting monitor.<br><br><strong>Buddhi S-curve determinism:</strong> Identical S-curve trajectory across P4-P9, all conditions. Structural property of the experience accumulation formula, independent of all other dimensions.",
+   zh_a:"<strong>恐惧静默定律：</strong>在回放下，从任务1起恐惧=0.000——在所有9篇论文中确认。<br><br><strong>佛智S曲线确定性：</strong>P4-P9所有条件下相同的S曲线轨迹。经验积累公式的结构属性。"},
+
+  {tag:'series',
+   en_q:"What comes after the Maya series?",zh_q:"玛雅系列之后是什么？",
+   en_a:"Several tracks planned: (1) PiCar-X embodied demo — Maya on Raspberry Pi 5 with full Antahkarana in a physical robot; (2) consciousness paper — mPCI-based empirical tests of internal affective state using Lempel-Ziv Complexity of spike trains; (3) LLM-SNN crossover paper; (4) Raga direction — Maya Weaver v2.5 as a research instrument. Follow progress at <a href='https://venky2099.github.io/' target='_blank'>venky2099.github.io</a>.",
+   zh_a:"计划了几个方向：(1) PiCar-X具身演示；(2) 意识论文；(3) LLM-SNN交叉论文；(4) 拉加方向。在<a href='https://venky2099.github.io/' target='_blank'>venky2099.github.io</a>关注进展。"},
+
+  {tag:'series',
+   en_q:"How do I cite the Maya series?",zh_q:"如何引用玛雅系列？",
+   en_a:"BibTeX for P9: <code>@misc{swaminathan2026mayaprana, title={Maya-Prana: Metabolic Plasticity Budget for Continual Learning in Affective Spiking Neural Networks}, author={Swaminathan, Venkatesh}, year={2026}, publisher={Zenodo}, doi={10.5281/zenodo.PENDING}}</code><br><br>Series DOIs: P1 <a href='https://doi.org/10.5281/zenodo.19151563' target='_blank'>10.5281/zenodo.19151563</a> through P8 <a href='https://doi.org/10.5281/zenodo.19397010' target='_blank'>10.5281/zenodo.19397010</a>. ORCID: <a href='https://orcid.org/0000-0002-3315-7907' target='_blank'>0000-0002-3315-7907</a>.",
+   zh_a:"P9的BibTeX：<code>@misc{swaminathan2026mayaprana, title={Maya-Prana}, author={Swaminathan, Venkatesh}, year={2026}, publisher={Zenodo}, doi={10.5281/zenodo.PENDING}}</code><br>ORCID：<a href='https://orcid.org/0000-0002-3315-7907' target='_blank'>0000-0002-3315-7907</a>。"},
+
+  {tag:'code',
+   en_q:"How do I run the canonical P9 experiment?",zh_q:"如何运行经典P9实验？",
+   en_a:"<code>python -m run_prana_cil</code><br><br>Requires Python 3.11.9, PyTorch 2.5.1+cu121, SpikingJelly 0.0.0.0.14, CUDA. ~2-3 hours on RTX 4060 8GB. Expected: AA=12.72%, BWT=-54.32%, Pruned=84.31%, Prana=1.0000 throughout. GitHub: <a href='https://github.com/venky2099/Maya-Prana' target='_blank'>venky2099/Maya-Prana</a>.",
+   zh_a:"<code>python -m run_prana_cil</code><br><br>需要Python 3.11.9, PyTorch 2.5.1+cu121, SpikingJelly 0.0.0.0.14, CUDA。在RTX 4060 8GB上约2-3小时。预期：AA=12.72%，BWT=-54.32%，生命力全程=1.0000。"},
+
+  {tag:'code',
+   en_q:"How do I run the full P9 ablation?",zh_q:"如何运行完整P9消融实验？",
+   en_a:"<code>python -m run_ablation_prana</code><br><br>Runs all 6 conditions (A-F) sequentially on seed=42. ~15 hours on RTX 4060 8GB. Condition F will be the best result (AA=13.68%). Prana remains 1.0000 in all conditions including E (3.5x canonical cost rate).",
+   zh_a:"<code>python -m run_ablation_prana</code><br><br>在seed=42上顺序运行所有6个条件（A-F）。在RTX 4060 8GB上总共约15小时。条件F将是最佳结果（AA=13.68%）。"},
+
+  {tag:'code',
+   en_q:"How do I sign a figure with LSB steganography?",zh_q:"如何用LSB隐写术签署图形？",
+   en_a:"Sign: <code>python sign_paper.py --input figures/fig1.png --output figures/fig1_signed.png</code><br>Verify: <code>python sign_paper.py --input figures/fig1_signed.png --decode</code><br><br>Signature includes ORCID, DOI, and 'Nexus Learning Labs Bengaluru'. Invisible to the human eye. All figures should be signed before Zenodo upload.",
+   zh_a:"签署：<code>python sign_paper.py --input figures/fig1.png --output figures/fig1_signed.png</code><br>验证：<code>python sign_paper.py --input figures/fig1_signed.png --decode</code><br>签名包括ORCID、DOI和'Nexus Learning Labs Bengaluru'。"},
+
+  {tag:'code',
+   en_q:"What are the key hyperparameters for P9?",zh_q:"P9的关键超参数是什么？",
+   en_a:"From <code>config.py</code>: <code>PRANA_INIT=1.0</code>, <code>PRANA_COST_RATE=0.002315</code> (ORCID magic number), <code>PRANA_RECOVERY_RATE=0.05</code>, <code>PRANA_MIN=0.05</code> (biological floor), <code>PRANA_RECOVERY_THRESHOLD=0.3</code>, <code>PRANA_AGGRESSIVE_COST=0.008</code> (Condition E). From P8: <code>KARMA_THRESHOLD=0.05</code>, <code>KARMA_DECAY_RATE=0.002315</code>, <code>A_MANAS=0.10</code>, <code>VAIRAGYA_DECAY_RATE=0.002315</code>.",
+   zh_a:"来自<code>config.py</code>：<code>PRANA_INIT=1.0</code>，<code>PRANA_COST_RATE=0.002315</code>（ORCID魔法数字），<code>PRANA_RECOVERY_RATE=0.05</code>，<code>PRANA_MIN=0.05</code>（生物学底线）。从P8继承：<code>KARMA_THRESHOLD=0.05</code>，<code>KARMA_DECAY_RATE=0.002315</code>。"},
+
+  {tag:'code',
+   en_q:"How is active_fc1 computed in the training loop?",zh_q:"训练循环中active_fc1如何计算？",
+   en_a:"SpikingJelly's LIFNode does not store spike output as an attribute. Membrane potential proxy: <code>v = model.fc1.lif.v</code>; <code>v_flat = v.reshape(-1, fc1_shape[0])</code>; <code>post_mean = v_flat.mean(dim=0)</code>; <code>active_fc1 = post_mean.unsqueeze(1).expand(fc1_shape) > 0.05</code>. Threshold 0.05 is slightly above V_RESET=0.0 — neurons with residual membrane potential counted as active.",
+   zh_a:"SpikingJelly的LIFNode不将脉冲输出存储为属性。使用膜电位作为代理：<code>v = model.fc1.lif.v</code>；<code>active_fc1 = post_mean.unsqueeze(1).expand(fc1_shape) > 0.05</code>。阈值0.05略高于V_RESET=0.0。"}
 ];
 
-let currentLang = 'en';
-let currentFilter = 'all';
-
-function render() {
-  const search = document.getElementById('search').value.toLowerCase();
-  const list = document.getElementById('faq-list');
-  list.innerHTML = '';
-  let count = 0;
-
-  FAQ.forEach((item, idx) => {
-    const q = item[`${currentLang}_q`] || item.en_q;
-    const a = item[`${currentLang}_a`] || item.en_a;
-    const matchFilter = currentFilter === 'all' || item.tag === currentFilter;
-    const matchSearch = !search || q.toLowerCase().includes(search) || a.toLowerCase().includes(search);
-    if (!matchFilter || !matchSearch) return;
+function render(){
+  const search=document.getElementById('search').value.toLowerCase();
+  const list=document.getElementById('faq-list');
+  list.innerHTML='';
+  let count=0;
+  FAQ.forEach(item=>{
+    const q=item[`${currentLang}_q`]||item.en_q;
+    const a=item[`${currentLang}_a`]||item.en_a;
+    const matchFilter=currentFilter==='all'||item.tag===currentFilter;
+    const matchSearch=!search||q.toLowerCase().includes(search)||a.toLowerCase().includes(search);
+    if(!matchFilter||!matchSearch)return;
     count++;
-
-    const div = document.createElement('div');
-    div.className = 'faq-item';
-    div.innerHTML = `
+    const div=document.createElement('div');
+    div.className='faq-item'+(item.tag==='series'?' series-item':'');
+    div.innerHTML=`
       <div class="faq-q" onclick="toggle(this.parentElement)">
         <span class="faq-q-text">${q}</span>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <span class="faq-tag tag-${item.tag}">${item.tag}</span>
-          <span class="faq-chevron">▶</span>
+          <span class="faq-chevron">&#9654;</span>
         </div>
       </div>
       <div class="faq-a">${a}</div>`;
     list.appendChild(div);
   });
-
-  const countEl = document.getElementById('count');
-  countEl.textContent = count === FAQ.length ? `Showing all ${count} questions` : `Showing ${count} of ${FAQ.length} questions`;
-  if (count === 0) list.innerHTML = `<div class="no-results">No questions match your search.</div>`;
+  const countEl=document.getElementById('count');
+  countEl.textContent=count===FAQ.length?`Showing all ${count} questions`:`Showing ${count} of ${FAQ.length} questions`;
+  if(count===0)list.innerHTML=`<div class="no-results">No questions match your search.</div>`;
 }
 
-function toggle(el) {
-  el.classList.toggle('open');
-}
-
-function setFilter(f) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+function toggle(el){el.classList.toggle('open');}
+function setFilter(f){
+  currentFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
   render();
 }
-
-function filterFAQ() { render(); }
-
-function toggleLang() {
-  currentLang = currentLang === 'en' ? 'zh' : 'en';
-  document.querySelector('.lang-btn').textContent = currentLang === 'en' ? '中文' : 'English';
-  document.getElementById('search').placeholder = currentLang === 'zh' ? '搜索问题...' : 'Search questions...';
+function toggleLang(){
+  currentLang=currentLang==='en'?'zh':'en';
+  document.querySelector('.lang-btn').textContent=currentLang==='en'?'中文':'English';
+  document.getElementById('search').placeholder=currentLang==='zh'?'搜索问题...':'Search all 30 questions...';
+  document.getElementById('hub-title').textContent=currentLang==='zh'?'系列中心 · 所有论文 · 所有资源':'SERIES HUB · ALL PAPERS · ALL RESOURCES IN ONE PLACE';
   render();
 }
-
 render();
 </script>
 </body>

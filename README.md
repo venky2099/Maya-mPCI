@@ -8,6 +8,7 @@ ORCID: [0000-0002-3315-7907](https://orcid.org/0000-0002-3315-7907)
 **Interactive Dashboard:** [maya_prana_dashboard.html](https://venky2099.github.io/Maya-Prana/docs/maya_prana_dashboard.html)
 **FAQ:** [faq.html](https://venky2099.github.io/Maya-Prana/docs/faq.html)
 **Live Demo:** Live Demo can be watched here: `[YOUTUBE LINK PENDING]`
+**Research Journey:** [venky2099.github.io](https://venky2099.github.io/)
 
 ---
 
@@ -50,13 +51,13 @@ Maya-Prana canonical (Condition D): **AA=12.72% | BWT=-54.32%** on Split-CIFAR-1
 
 ### Series Constants Confirmed for the 9th Time
 
-**Bhaya Quiescence Law:** Bhaya (fear signal) collapses to exactly 0.000 from Task 1 onward under replay, across all 9 papers and all ablation conditions. Any deployed Maya system can use Bhaya as a real-time catastrophic forgetting monitor.
+**Bhaya Quiescence Law:** Bhaya collapses to exactly 0.000 from Task 1 onward under replay, across all 9 papers and all ablation conditions. Any deployed Maya system can use Bhaya as a real-time catastrophic forgetting monitor.
 
-**Buddhi S-Curve Determinism:** Buddhi follows an identical S-curve trajectory across all papers and conditions — rising from 0.0 at Task 0 to approximately 1.0 by Task 3-4. Structural property of the experience accumulation formula.
+**Buddhi S-Curve Determinism:** Buddhi follows an identical S-curve trajectory across all papers and conditions. Structural property of the experience accumulation formula, independent of all hyperparameters.
 
 ### Prana Resilience — The Core Finding
 
-At PRANA_COST_RATE=0.002315, Prana maintained full budget (1.0000) across all 10 tasks under standard learning load. Even at 3.5x the cost rate (Condition E), Prana never depleted. This is consistent with the biological literature: the ANLS does not fail under standard cognitive load.
+At PRANA_COST_RATE=0.002315, Prana maintained full budget (1.0000) across all 10 tasks. Even at 3.5x the cost rate (Condition E), Prana never depleted. Consistent with the biological literature: the ANLS does not fail under standard cognitive load.
 
 ### Unexpected Finding — Condition F
 
@@ -73,7 +74,7 @@ The Buddhi warm-up schedule (starting at EffLR=0.005 at Task 0) penalises early 
 | A — Baseline | 12.46 | -53.80 | 85.19% | P8 Maya-Shunyata, no Prana |
 | B — Prana only | 10.33 | -55.82 | 91.85% | Prana without full Antahkarana |
 | C — Fixed Prana | 12.02 | -54.82 | 84.28% | Prana=1.0 constant, structural check |
-| **D — Canonical** | **12.72** | **-54.32** | **84.31%** | **Full Maya-Prana starred** |
+| **D — Canonical** | **12.72** | **-54.32** | **84.31%** | **Full Maya-Prana** |
 | E — Aggressive depletion | 12.25 | -54.70 | 84.30% | Cost rate 3.5x canonical |
 | F — No Buddhi gate | **13.68** | **-51.20** | **46.93%** | Fixed EffLR, unexpected best result |
 
