@@ -1,5 +1,5 @@
-﻿# logger.py -- Maya-Shunyata (Paper 8)
-# Extends P7 logger with karma_mean, pruned_fraction, shunyata_events columns.
+﻿# logger.py -- Maya-Prana (Paper 9)
+# Extends P8 logger with prana_value, prana_mean, effective_lr columns.
 # Canary: MayaNexusVS2026NLL_Bengaluru_Narasimha
 
 import csv
@@ -28,7 +28,9 @@ class RunLogger:
                   manas_peak_fraction: float = 0.0,
                   karma_mean: float = 0.0,
                   pruned_fraction: float = 0.0,
-                  shunyata_events: int = 0) -> None:
+                  shunyata_events: int = 0,
+                  prana_value: float = 1.0,
+                  effective_lr: float = 0.01) -> None:
         row = {
             "task":                    task,
             "epoch":                   epoch,
@@ -46,6 +48,8 @@ class RunLogger:
             "buddhi":                  round(affective.get("buddhi",   0), 6),
             "chitta":                  round(affective.get("chitta",   0), 6),
             "manas":                   round(affective.get("manas",    0), 6),
+            "shunyata":                round(affective.get("shunyata", 0), 6),
+            "prana":                   round(affective.get("prana",    1), 6),
             "samskara_mean":           round(samskara_mean,        6),
             "moha_fraction":           round(moha_fraction,        6),
             "retrograde_fired":        int(retrograde_fired),
@@ -53,6 +57,8 @@ class RunLogger:
             "karma_mean":              round(karma_mean,           6),
             "pruned_fraction":         round(pruned_fraction,      6),
             "shunyata_events":         shunyata_events,
+            "prana_value":             round(prana_value,          6),
+            "effective_lr":            round(effective_lr,         8),
         }
         if self._writer is None:
             self._writer = csv.DictWriter(
@@ -62,13 +68,17 @@ class RunLogger:
 
     def log_task_summary(self, task_id: int,
                          acc_dict: dict, summary: dict,
-                         karma_summary: dict = None) -> None:
+                         karma_summary: dict = None,
+                         prana_summary: dict = None) -> None:
         msg = (f"  [Task {task_id} summary] "
                f"AA={summary.get('AA','?')} "
                f"BWT={summary.get('BWT','?')}")
         if karma_summary:
             msg += (f" | pruned={karma_summary.get('pruned_fraction',0)*100:.2f}% "
                     f"karma_mean={karma_summary.get('karma_mean',0):.4f}")
+        if prana_summary:
+            msg += (f" | prana_mean={prana_summary.get('mean',1):.4f} "
+                    f"prana_min={prana_summary.get('min',1):.4f}")
         print(msg)
 
     def log_final(self, summary: dict) -> None:

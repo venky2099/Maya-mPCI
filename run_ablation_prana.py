@@ -1,12 +1,12 @@
-﻿# run_ablation_shunyata.py -- Maya-Shunyata Paper 8 ablation study
+﻿# run_ablation_prana.py -- Maya-Prana Paper 9 ablation study
 # Split-CIFAR-100 CIL, 6 conditions
 #
-# A: P7 Maya-Manas baseline      -- no Karma, no pruning
-# B: Karma + Vairagya only       -- no Viveka, no Chitta, no Manas-GANE
-# C: Full affective + continuous pruning -- batch-level, expected instability
-# D: Full affective + boundary pruning  -- canonical starred
-# E: Full affective + aggressive threshold -- spike starvation risk
-# F: Karma replaces Chitta entirely      -- full Chitta disable
+# A: P8 baseline (no Prana)              -- reference ~15.19% AA
+# B: Prana only, no other affective dims -- unregulated budget, expected collapse
+# C: Fixed Prana (constant 1.0)          -- structural check, should match A
+# D: Full Maya-Prana, calibrated         -- canonical starred
+# E: Aggressive depletion rate           -- learning starvation risk
+# F: Prana without Buddhi modulation     -- tests mature regulation
 #
 # Canary: MayaNexusVS2026NLL_Bengaluru_Narasimha
 
@@ -19,16 +19,14 @@ from tqdm import tqdm
 
 from maya_cl.utils.config import (
     EPOCHS_PER_TASK, NUM_TASKS, T_STEPS,
-    VAIRAGYA_PROTECTION_THRESHOLD,
     REPLAY_BUFFER_SIZE, REPLAY_RATIO,
-    REPLAY_VAIRAGYA_PARTIAL_LIFT,
     CIL_BOUNDARY_DECAY, BATCH_SIZE,
     REPLAY_PAIN_EXEMPT, A_MANAS,
-    KARMA_THRESHOLD, KARMA_THRESHOLD_LOW,
+    KARMA_THRESHOLD, PRANA_COST_RATE, PRANA_AGGRESSIVE_COST,
 )
 from maya_cl.utils.seed import set_seed
 from maya_cl.encoding.poisson import PoissonEncoder
-from maya_cl.network.backbone import MayaShunyataNet
+from maya_cl.network.backbone import MayaPranaNet
 from maya_cl.network.affective_state import AffectiveState
 from maya_cl.benchmark.split_cifar100 import (
     get_task_loaders, get_all_test_loaders, TASK_CLASSES
@@ -40,66 +38,74 @@ from maya_cl.plasticity.viveka import VivekaConsistency
 from maya_cl.plasticity.chitta import ChittaSamskara
 from maya_cl.plasticity.manas import ManasConsistency
 from maya_cl.plasticity.karma import KarmaShunyata
+from maya_cl.plasticity.prana import PranaMetabolic
 from maya_cl.eval.metrics import CLMetrics, evaluate_task
 from maya_cl.eval.logger import RunLogger
 from maya_cl.training.replay_buffer import ReplayBuffer
 
 N_REPLAY = round(BATCH_SIZE * REPLAY_RATIO / (1.0 - REPLAY_RATIO))
+BASE_LR  = 0.01
 
 CONDITIONS = {
     'A_baseline': {
-        'use_karma':        False,
-        'use_chitta':       True,
-        'use_viveka':       True,
-        'use_manas_gane':   True,
-        'boundary_only':    True,
-        'karma_threshold':  KARMA_THRESHOLD,
-        'description':      'P7 Maya-Manas baseline — no Karma, no pruning',
+        'use_prana':       False,
+        'use_chitta':      True,
+        'use_viveka':      True,
+        'use_manas_gane':  True,
+        'buddhi_gate':     True,
+        'prana_cost_rate': PRANA_COST_RATE,
+        'fixed_prana':     False,
+        'description':     'P8 Maya-Shunyata baseline -- no Prana',
     },
-    'B_karma_vairagya': {
-        'use_karma':        True,
-        'use_chitta':       False,
-        'use_viveka':       False,
-        'use_manas_gane':   False,
-        'boundary_only':    True,
-        'karma_threshold':  KARMA_THRESHOLD,
-        'description':      'Karma + Vairagya only — no higher affective dims',
+    'B_prana_only': {
+        'use_prana':       True,
+        'use_chitta':      False,
+        'use_viveka':      False,
+        'use_manas_gane':  False,
+        'buddhi_gate':     True,
+        'prana_cost_rate': PRANA_COST_RATE,
+        'fixed_prana':     False,
+        'description':     'Prana only -- no Chitta, Viveka, Manas-GANE',
     },
-    'C_continuous_pruning': {
-        'use_karma':        True,
-        'use_chitta':       True,
-        'use_viveka':       True,
-        'use_manas_gane':   True,
-        'boundary_only':    False,
-        'karma_threshold':  KARMA_THRESHOLD,
-        'description':      'Full affective + continuous batch-level pruning',
+    'C_fixed_prana': {
+        'use_prana':       True,
+        'use_chitta':      True,
+        'use_viveka':      True,
+        'use_manas_gane':  True,
+        'buddhi_gate':     True,
+        'prana_cost_rate': PRANA_COST_RATE,
+        'fixed_prana':     True,
+        'description':     'Fixed Prana=1.0 constant -- structural check, expected ~A',
     },
-    'D_boundary_canonical': {
-        'use_karma':        True,
-        'use_chitta':       True,
-        'use_viveka':       True,
-        'use_manas_gane':   True,
-        'boundary_only':    True,
-        'karma_threshold':  KARMA_THRESHOLD,
-        'description':      'Full affective + boundary pruning — canonical',
+    'D_canonical': {
+        'use_prana':       True,
+        'use_chitta':      True,
+        'use_viveka':      True,
+        'use_manas_gane':  True,
+        'buddhi_gate':     True,
+        'prana_cost_rate': PRANA_COST_RATE,
+        'fixed_prana':     False,
+        'description':     'Full Maya-Prana canonical -- starred',
     },
-    'E_aggressive_threshold': {
-        'use_karma':        True,
-        'use_chitta':       True,
-        'use_viveka':       True,
-        'use_manas_gane':   True,
-        'boundary_only':    True,
-        'karma_threshold':  KARMA_THRESHOLD_LOW,
-        'description':      f'Full affective + aggressive threshold={KARMA_THRESHOLD_LOW}',
+    'E_aggressive_depletion': {
+        'use_prana':       True,
+        'use_chitta':      True,
+        'use_viveka':      True,
+        'use_manas_gane':  True,
+        'buddhi_gate':     True,
+        'prana_cost_rate': PRANA_AGGRESSIVE_COST,
+        'fixed_prana':     False,
+        'description':     f'Aggressive depletion rate={PRANA_AGGRESSIVE_COST} -- starvation risk',
     },
-    'F_karma_replaces_chitta': {
-        'use_karma':        True,
-        'use_chitta':       False,
-        'use_viveka':       True,
-        'use_manas_gane':   True,
-        'boundary_only':    True,
-        'karma_threshold':  KARMA_THRESHOLD,
-        'description':      'Karma replaces Chitta entirely — full Chitta disable',
+    'F_no_buddhi_gate': {
+        'use_prana':       True,
+        'use_chitta':      True,
+        'use_viveka':      True,
+        'use_manas_gane':  True,
+        'buddhi_gate':     False,
+        'prana_cost_rate': PRANA_COST_RATE,
+        'fixed_prana':     False,
+        'description':     'Prana without Buddhi modulation -- tests mature regulation',
     },
 }
 
@@ -117,10 +123,10 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
     print(f"  Seed      : {seed}")
     print(f"{'='*60}")
 
-    model         = MayaShunyataNet(use_orthogonal_head=False, a_manas=A_MANAS).to(device)
+    model         = MayaPranaNet(use_orthogonal_head=False, a_manas=A_MANAS).to(device)
     encoder       = PoissonEncoder(T_STEPS)
     criterion     = nn.CrossEntropyLoss()
-    optimizer     = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    optimizer     = torch.optim.SGD(model.parameters(), lr=BASE_LR, momentum=0.9)
     affect        = AffectiveState(device)
     sequencer     = TaskSequencer()
     metrics       = CLMetrics(NUM_TASKS)
@@ -137,8 +143,8 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
     viveka        = VivekaConsistency(fc1_shape, device)
     chitta        = ChittaSamskara(fc1_shape, device)
     manas_cons    = ManasConsistency(fc1_shape, device)
-    karma         = KarmaShunyata(
-        fc1_shape, device, threshold=cfg['karma_threshold'])
+    karma         = KarmaShunyata(fc1_shape, device, threshold=KARMA_THRESHOLD)
+    prana         = PranaMetabolic(device, cost_rate=cfg['prana_cost_rate'])
 
     w_prev     = model.fc1.fc.weight.data.clone()
     prev_loss  = None
@@ -147,7 +153,6 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
     for task_id in range(NUM_TASKS):
         train_loader, _ = get_task_loaders(task_id)
         sequencer.current_task = task_id
-        current_classes = TASK_CLASSES[task_id]
 
         seen_classes = []
         for t in range(task_id + 1):
@@ -171,47 +176,44 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
             if cfg['use_viveka']:
                 viveka.on_task_boundary()
 
-            affect.reset_experience()
+            n_pruned = karma.on_task_boundary(
+                model.fc1.fc.weight.data,
+                buddhi=affect.buddhi_value(),
+                vairagya_scores=vairagya_fc1.scores)
+            affect.update_shunyata(n_pruned, fc1_shape[0] * fc1_shape[1])
 
-            if cfg['use_karma'] and cfg['boundary_only']:
-                buddhi_val = affect.buddhi_value()
-                n_pruned   = karma.on_task_boundary(
-                    model.fc1.fc.weight.data, buddhi=buddhi_val)
-                if n_pruned > 0:
-                    affect.update_shunyata(
-                        n_pruned, fc1_shape[0] * fc1_shape[1])
+            if cfg['use_prana']:
+                prana.on_task_boundary()
+                affect.update_prana(prana.value())
 
             tasks_seen += 1
 
-        print(f"--- Task {task_id} ---")
+        print(f"\nTask {task_id} | classes {TASK_CLASSES[task_id]}")
 
         for epoch in range(EPOCHS_PER_TASK):
-            model.train()
             epoch_loss = 0.0
+            model.train()
 
             for batch_idx, (images, labels) in enumerate(tqdm(
-                    train_loader, desc=f"  Epoch {epoch+1}/{EPOCHS_PER_TASK}")):
+                    train_loader, desc=f"  T{task_id} E{epoch}", leave=False)):
 
-                is_replay_batch = replay_buffer.is_ready() and task_id > 0
-                if is_replay_batch:
+                images = images.to(device)
+                labels = labels.to(device)
+
+                is_replay_batch = False
+                if replay_buffer.is_ready():
                     r_imgs, r_lbls = replay_buffer.sample(N_REPLAY, device)
                     if r_imgs is not None:
-                        images = torch.cat([images.to(device), r_imgs])
-                        labels = torch.cat([labels.to(device), r_lbls])
-                    else:
-                        images = images.to(device)
-                        labels = labels.to(device)
-                        is_replay_batch = False
-                else:
-                    images = images.to(device)
-                    labels = labels.to(device)
+                        images = torch.cat([images, r_imgs], dim=0)
+                        labels = torch.cat([labels, r_lbls], dim=0)
+                        is_replay_batch = True
 
                 spike_seq = encoder(images)
                 model.reset()
-                logits = model(spike_seq)
-
+                logits      = model(spike_seq)
                 peak_active = model.get_fc1_peak_active()
 
+                # active_fc1 [FC1_SIZE, in_features] -- membrane voltage proxy
                 with torch.no_grad():
                     v = model.fc1.lif.v
                     if v is not None and v.numel() > 0:
@@ -219,75 +221,58 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
                         post_mean  = v_flat.mean(dim=0)
                         active_fc1 = post_mean.unsqueeze(1).expand(fc1_shape) > 0.05
                     else:
-                        active_fc1 = torch.zeros(
-                            fc1_shape, dtype=torch.bool, device=device)
+                        active_fc1 = torch.zeros(fc1_shape, dtype=torch.bool, device=device)
 
-                    if cfg['use_manas_gane'] and cfg['use_viveka']:
-                        peak_active_expanded = peak_active.unsqueeze(1).expand(fc1_shape)
-                        manas_gane_mask = manas_cons.compute_manas_gane_mask(
-                            viveka.scores, viveka_threshold=0.3) & peak_active_expanded
-                    else:
-                        manas_gane_mask = torch.zeros(
-                            fc1_shape, dtype=torch.bool, device=device)
+                seen_logits = logits.clone()
+                seen_logits[:, ~seen_mask] = float('-inf')
+                loss = criterion(seen_logits, labels)
 
-                loss = criterion(logits, labels)
                 optimizer.zero_grad()
                 loss.backward()
 
-                retrograde_fired = False
-                with torch.no_grad():
-                    if model.fc_out.weight.grad is not None:
-                        protected_fout = (
-                            vairagya_fout.scores >= VAIRAGYA_PROTECTION_THRESHOLD
-                        ).clone()
-                        for c in current_classes:
-                            protected_fout[c, :] = False
-                        model.fc_out.weight.grad[protected_fout] = 0.0
+                buddhi_val   = affect.buddhi_value()
+                spike_rate   = float(active_fc1.float().mean().item())
+                vairagya_val = vairagya_fc1.protection_fraction()
 
+                # Prana gating
+                if cfg['use_prana'] and not cfg['fixed_prana']:
+                    grad_mag = 0.0
                     if model.fc1.fc.weight.grad is not None:
-                        protected_fc1 = (
-                            vairagya_fc1.scores >= VAIRAGYA_PROTECTION_THRESHOLD
-                        ).clone()
-                        class_weights = model.fc_out.weight[current_classes, :]
-                        cw_mean       = class_weights.abs().mean(dim=0)
-                        threshold_80  = torch.quantile(cw_mean, 0.80)
-                        important_fc1 = cw_mean > threshold_80
-                        protected_fc1[important_fc1, :] = False
+                        grad_mag = float(model.fc1.fc.weight.grad.abs().mean().item())
+                    prana.update(grad_mag, spike_rate, vairagya_val)
+                    affect.update_prana(prana.value())
+                    gate_buddhi = buddhi_val if cfg['buddhi_gate'] else 0.5
+                    eff_lr = prana.effective_lr(BASE_LR, gate_buddhi)
+                elif cfg['use_prana'] and cfg['fixed_prana']:
+                    eff_lr = BASE_LR * (0.5 + buddhi_val * 0.5)
+                else:
+                    eff_lr = BASE_LR
 
-                        if is_replay_batch:
-                            model.fc1.fc.weight.grad[protected_fc1] *= (
-                                1.0 - REPLAY_VAIRAGYA_PARTIAL_LIFT)
-                        else:
-                            model.fc1.fc.weight.grad[protected_fc1] = 0.0
+                for pg in optimizer.param_groups:
+                    pg['lr'] = eff_lr
 
-                    if cfg['use_chitta']:
-                        chitta_gate      = chitta.compute_gradient_gate(
-                            active_fc1, tasks_seen)
-                        retrograde_fired = bool((chitta_gate < 1.0).any().item())
-                        if retrograde_fired and model.fc1.fc.weight.grad is not None:
-                            chitta.apply_gradient_gate(
-                                model.fc1.fc.weight.grad, chitta_gate)
-                            affect.update_chitta(
-                                True, float((1.0 - chitta_gate).mean().item()))
+                if cfg['use_chitta']:
+                    chitta_gate      = chitta.compute_gradient_gate(active_fc1, tasks_seen)
+                    retrograde_fired = chitta_gate.mean().item() < 1.0
+                    if model.fc1.fc.weight.grad is not None:
+                        chitta.apply_gradient_gate(model.fc1.fc.weight.grad, chitta_gate)
+                        affect.update_chitta(
+                            True, float((1.0 - chitta_gate).mean().item()))
+                else:
+                    retrograde_fired = False
+
+                manas_gane_mask = torch.zeros(fc1_shape, dtype=torch.bool, device=device)
+                if cfg['use_manas_gane'] and peak_active is not None:
+                    peak_2d         = peak_active.unsqueeze(1).expand(fc1_shape)
+                    manas_gane_mask = active_fc1 & peak_2d
 
                 optimizer.step()
 
                 with torch.no_grad():
-                    if cfg['use_karma']:
-                        w_current = model.fc1.fc.weight.data
-                        karma.accumulate(w_current, w_prev)
-
-                        # continuous pruning -- Condition C only
-                        if not cfg['boundary_only']:
-                            buddhi_val = affect.buddhi_value()
-                            n_pruned   = karma.on_task_boundary(
-                                model.fc1.fc.weight.data, buddhi=buddhi_val)
-                            if n_pruned > 0:
-                                affect.update_shunyata(
-                                    n_pruned, fc1_shape[0] * fc1_shape[1])
-
-                        karma.apply_mask(model.fc1.fc.weight.data)
-                        w_prev = model.fc1.fc.weight.data.clone()
+                    w_current = model.fc1.fc.weight.data
+                    karma.accumulate(w_current, w_prev)
+                    karma.apply_mask(model.fc1.fc.weight.data)
+                    w_prev = w_current.clone()
 
                 epoch_loss += loss.item()
 
@@ -301,7 +286,6 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
                         pain = sequencer.check_pain_signal(cur_loss, prev_loss, conf)
                         prev_loss = cur_loss
 
-                    spike_rate = active_fc1.float().mean().item()
                     affect.update(conf, pain, spike_rate)
                     affect.update_manas(peak_active)
 
@@ -346,11 +330,11 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
                         bhaya=bhaya_val, buddhi=buddhi_val)
 
                     if cfg['use_manas_gane'] and peak_active is not None:
-                        peak_active_expanded_bool = peak_active.unsqueeze(1).expand(fc1_shape)
-                        manas_peak_fc1 = active_fc1 & peak_active_expanded_bool
+                        peak_2d_bool   = peak_active.unsqueeze(1).expand(fc1_shape)
+                        manas_peak_fc1 = active_fc1 & peak_2d_bool
                         manas_cons.update(manas_peak_fc1)
 
-                manas_peak_fraction = float(peak_active.float().mean().item())
+                manas_peak_fraction = float(peak_active.float().mean().item()) if peak_active is not None else 0.0
 
                 logger.log_batch(
                     task=task_id, epoch=epoch, batch=batch_idx,
@@ -362,9 +346,11 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
                     moha_fraction=chitta.moha_fraction() if cfg['use_chitta'] else 0.0,
                     retrograde_fired=bool(retrograde_fired),
                     manas_peak_fraction=manas_peak_fraction,
-                    karma_mean=karma.karma_mean() if cfg['use_karma'] else 0.0,
-                    pruned_fraction=karma.pruned_fraction() if cfg['use_karma'] else 0.0,
-                    shunyata_events=karma.total_pruned() if cfg['use_karma'] else 0,
+                    karma_mean=karma.karma_mean(),
+                    pruned_fraction=karma.pruned_fraction(),
+                    shunyata_events=karma.total_pruned(),
+                    prana_value=prana.value() if cfg['use_prana'] else 1.0,
+                    effective_lr=eff_lr,
                 )
 
             with torch.no_grad():
@@ -375,9 +361,10 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
             print(f"    Loss: {epoch_loss/len(train_loader):.4f} | "
                   f"Bhaya: {affect.bhaya.item():.3f} | "
                   f"Buddhi: {affect.buddhi_value():.3f} | "
+                  f"Prana: {prana.value():.4f} | "
+                  f"EffLR: {eff_lr:.6f} | "
                   f"Karma: {karma.karma_mean():.4f} | "
-                  f"Pruned: {karma.pruned_fraction()*100:.2f}% | "
-                  f"V-fc1: {vairagya_fc1.protection_fraction()*100:.1f}%")
+                  f"Pruned: {karma.pruned_fraction()*100:.2f}%")
 
         print(f"  Evaluating after Task {task_id} [CIL]...")
         acc_dict = {}
@@ -391,7 +378,8 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
 
         logger.log_task_summary(
             task_id, acc_dict, metrics.summary(),
-            karma.summary() if cfg['use_karma'] else None)
+            karma.summary(),
+            {"mean": prana.mean_history(), "min": prana.min_history()})
 
     metrics.print_matrix()
     final = metrics.summary()
@@ -400,9 +388,9 @@ def run_condition(condition_name: str, seed: int = 42) -> dict:
     print(f"  AA  : {final['AA']}%")
     print(f"  BWT : {final['BWT']}%")
     print(f"  FWT : {final['FWT']}%")
-    if cfg['use_karma']:
-        print(f"  Total pruned: {karma.total_pruned()} synapses "
-              f"({karma.pruned_fraction()*100:.2f}%)")
+    print(f"  Total pruned: {karma.total_pruned()} synapses "
+          f"({karma.pruned_fraction()*100:.2f}%)")
+    print(f"  Prana final: {prana.value():.4f}")
     print(f"{'='*60}")
     logger.log_final(final)
     logger.close()
@@ -415,7 +403,7 @@ if __name__ == "__main__":
         results[cond] = run_condition(cond, seed=42)
 
     print(f"\n{'='*60}")
-    print("ABLATION SUMMARY -- Maya-Shunyata Paper 8")
+    print("ABLATION SUMMARY -- Maya-Prana Paper 9")
     print(f"{'='*60}")
     for cond, r in results.items():
         print(f"  {cond:30s} AA={r['AA']}% BWT={r['BWT']}%")

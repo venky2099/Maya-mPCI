@@ -1,5 +1,5 @@
-﻿# affective_state.py -- Maya-Shunyata (Paper 8)
-# Extends P7 with shunyata_signal tracking.
+﻿# affective_state.py -- Maya-Prana (Paper 9)
+# Extends P8 with prana tracking.
 # Canary: MayaNexusVS2026NLL_Bengaluru_Narasimha
 
 import torch
@@ -20,11 +20,13 @@ class AffectiveState:
         self.buddhi   = torch.tensor(0.85, device=device)
         self.chitta   = torch.tensor(0.0,  device=device)
         self.manas    = torch.tensor(0.0,  device=device)
-
-        # Shunyata signal -- rises each time a pruning event fires.
-        # Reflects the system's current release activity.
-        # Decays passively each batch -- pruning is transient, not chronic.
         self.shunyata = torch.tensor(0.0,  device=device)
+
+        # Prana -- P9 new dimension.
+        # Scalar metabolic plasticity budget. Tracked here for logging/dashboard.
+        # Actual depletion/recovery logic lives in PranaMetabolic (plasticity/prana.py).
+        # This value is updated by the training loop via update_prana().
+        self.prana = torch.tensor(1.0, device=device)
 
         self._experience_count = 0
         self._tau_buddhi       = TAU_BUDDHI
@@ -60,7 +62,6 @@ class AffectiveState:
         self.buddhi = torch.clamp(
             exp_factor * (1.0 - self.bhaya), 0.0, 1.0)
 
-        # Passive decay each batch
         self.chitta   = torch.clamp(self.chitta   * 0.995, 0.0, 1.0)
         self.manas    = torch.clamp(self.manas    * 0.995, 0.0, 1.0)
         self.shunyata = torch.clamp(self.shunyata * 0.990, 0.0, 1.0)
@@ -81,13 +82,17 @@ class AffectiveState:
                 0.0, 1.0)
 
     def update_shunyata(self, n_pruned: int, total_synapses: int) -> None:
-        # rises proportionally to fraction of synapses released this boundary
         if n_pruned > 0 and total_synapses > 0:
             release_fraction = n_pruned / total_synapses
             self.shunyata = torch.clamp(
                 self.shunyata + torch.tensor(
                     release_fraction * 2.0, device=self.device),
                 0.0, 1.0)
+
+    def update_prana(self, prana_value: float) -> None:
+        """Called by training loop after PranaMetabolic.update() each batch."""
+        self.prana = torch.tensor(
+            float(prana_value), device=self.device).clamp(0.0, 1.0)
 
     def reset_experience(self) -> None:
         self._experience_count = 0
@@ -107,6 +112,9 @@ class AffectiveState:
     def shunyata_value(self) -> float:
         return float(self.shunyata.item())
 
+    def prana_value(self) -> float:
+        return float(self.prana.item())
+
     def as_dict(self) -> dict:
         return {
             "shraddha": float(self.shraddha.item()),
@@ -118,4 +126,5 @@ class AffectiveState:
             "chitta":   float(self.chitta.item()),
             "manas":    float(self.manas.item()),
             "shunyata": float(self.shunyata.item()),
+            "prana":    float(self.prana.item()),
         }

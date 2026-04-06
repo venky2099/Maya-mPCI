@@ -1,5 +1,6 @@
-﻿# backbone.py -- Maya-Shunyata network architecture (Paper 8)
-# Carries forward O-LIF fc1 from P7. Adds Karma mask application.
+﻿# backbone.py -- Maya-Prana network architecture (Paper 9)
+# Carries forward O-LIF fc1 and Karma mask from P8. Class renamed to MayaPranaNet.
+# Prana gates effective_lr externally in training loop -- backbone is Prana-unaware.
 # Canary: MayaNexusVS2026NLL_Bengaluru_Narasimha
 
 import torch
@@ -28,14 +29,10 @@ class LIFLayer(nn.Module):
         return self.lif(self.fc(x))
 
 
-class MayaShunyataLIFLayer(nn.Module):
+class MayaPranaLIFLayer(nn.Module):
     """
-    O-LIF layer carried forward from P7 with Karma mask support.
-
-    Karma mask is applied externally via KarmaShunyata.apply_mask()
-    after every optimizer.step(). The layer itself is mask-unaware —
-    pruned weights are permanently zeroed in weight.data directly.
-    Peak-aligned activity tracking for Manas-GANE preserved from P7.
+    O-LIF layer carried forward from P8 with Karma mask support.
+    Renamed from MayaShunyataLIFLayer. Mechanism unchanged.
     """
 
     def __init__(self, in_features: int, out_features: int,
@@ -52,7 +49,6 @@ class MayaShunyataLIFLayer(nn.Module):
         self.peak_active: torch.Tensor = None
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """x: [T, B, in_features] -- returns [T, B, out_features]"""
         T = x.shape[0]
         outputs = []
         peak_fire_accum = torch.zeros(
@@ -94,10 +90,10 @@ class OrthogonalPrototypeHead(nn.Module):
         return (x_norm @ p_norm.T) * 10.0
 
 
-class MayaShunyataNet(nn.Module):
+class MayaPranaNet(nn.Module):
     """
-    Maya-Shunyata network -- P8 backbone.
-    Identical to P7 in structure. Karma mask enforcement is external.
+    Maya-Prana network -- P9 backbone.
+    Identical to P8 in structure. Prana gates learning rate externally.
     """
 
     def __init__(self, use_orthogonal_head: bool = False,
@@ -126,7 +122,7 @@ class MayaShunyataNet(nn.Module):
         )
 
         conv_out_dim = CONV3_CHANNELS * 8 * 8
-        self.fc1 = MayaShunyataLIFLayer(conv_out_dim, FC1_SIZE, a_manas=a_manas)
+        self.fc1 = MayaPranaLIFLayer(conv_out_dim, FC1_SIZE, a_manas=a_manas)
 
         if use_orthogonal_head:
             self.fc_out = OrthogonalPrototypeHead(NUM_CLASSES, PROTOTYPE_DIM)
@@ -138,7 +134,6 @@ class MayaShunyataNet(nn.Module):
         functional.set_step_mode(self.conv3, step_mode='m')
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """x: [T, B, C, H, W]"""
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
