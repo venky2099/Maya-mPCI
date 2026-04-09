@@ -9,7 +9,6 @@
 **Author:** Venkatesh Swaminathan  
 **Affiliation:** Nexus Learning Labs, Bengaluru · M.Sc. DSAI, BITS Pilani  
 **DOI:** [10.5281/zenodo.19482794](https://doi.org/10.5281/zenodo.19482794)  
-**Paper:** [Swaminathan_2026_Maya-mPCI_SNNv4.docx](./Swaminathan_2026_Maya-mPCI_SNNv4.docx)  
 **Dashboard:** [Interactive trilingual dashboard](https://venky2099.github.io/Maya-mPCI/docs/maya_mpci_dashboard.html)  
 **FAQ:** [Exhaustive FAQ (EN/हिन्दी/中文)](https://venky2099.github.io/Maya-mPCI/docs/maya_mpci_faq.html)
 
