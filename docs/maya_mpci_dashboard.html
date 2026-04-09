@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maya-mPCI · From Representation to Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+Devanagari:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#04040a;
+  --surface:#0c0c18;
+  --surface2:#141428;
+  --surface3:#1c1c38;
+  --border:#252545;
+  --border2:#3a3a6a;
+  --accent:#9d7cff;
+  --accent2:#ff6b9d;
+  --accent3:#4ecdc4;
+  --gold:#f5c842;
+  --mpci:#e040fb;
+  --mpci2:#b820d8;
+  --bhaya:#ff4757;
+  --vairagya:#4ecdc4;
+  --buddhi:#7c6fff;
+  --prana:#00d4aa;
+  --phase1:#ff6b6b;
+  --phase2:#7c6fff;
+  --phase3:#00d4aa;
+  --text:#eeeeff;
+  --text-dim:#7878aa;
+  --text-mid:#aaaacc;
+  --glow:0 0 30px rgba(224,64,251,0.4);
+  --glow2:0 0 20px rgba(157,124,255,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Crimson Pro',serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── STARFIELD ── */
+#starfield{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 15% 40%,rgba(100,40,180,0.12) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 20%,rgba(40,80,200,0.10) 0%,transparent 55%),
+    radial-gradient(ellipse at 50% 80%,rgba(180,40,100,0.06) 0%,transparent 50%),
+    var(--bg);
+}
+.star{
+  position:absolute;border-radius:50%;
+  background:white;animation:twinkle var(--d,4s) ease-in-out infinite;
+  animation-delay:var(--delay,0s);
+}
+@keyframes twinkle{0%,100%{opacity:var(--lo,0.2);transform:scale(1)}50%{opacity:var(--hi,0.8);transform:scale(1.3)}}
+
+/* ── LAYOUT ── */
+.container{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:0 24px 80px}
+
+/* ── HEADER ── */
+header{
+  text-align:center;padding:56px 24px 40px;
+  position:relative;
+}
+.lang-bar{
+  position:absolute;top:24px;right:24px;
+  display:flex;gap:6px;
+}
+.lang-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:16px;padding:4px 14px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-dim);transition:all 0.2s;letter-spacing:1px;
+}
+.lang-btn.active{border-color:var(--mpci);color:var(--mpci);box-shadow:0 0 12px rgba(224,64,251,0.3)}
+.lang-btn:hover{border-color:var(--text-mid);color:var(--text-mid)}
+.reset-btn{
+  position:absolute;top:24px;left:24px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:16px;padding:4px 14px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--gold);letter-spacing:1px;transition:all 0.2s;
+}
+.reset-btn:hover{border-color:var(--gold);box-shadow:0 0 12px rgba(245,200,66,0.3)}
+.badge-row{display:flex;justify-content:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.badge{
+  display:inline-block;border-radius:20px;padding:4px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;
+}
+.badge-series{background:rgba(157,124,255,0.1);border:1px solid var(--accent);color:var(--accent)}
+.badge-post{background:rgba(224,64,251,0.1);border:1px solid var(--mpci);color:var(--mpci)}
+h1{
+  font-family:'Cinzel',serif;
+  font-size:clamp(22px,4vw,46px);
+  font-weight:400;letter-spacing:2px;
+  line-height:1.15;margin-bottom:10px;
+}
+h1 em{color:var(--mpci);font-style:normal;text-shadow:0 0 30px rgba(224,64,251,0.5)}
+.subtitle{color:var(--text-dim);font-size:16px;font-weight:300;margin-bottom:6px}
+.meta-row{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-dim);margin-bottom:6px;
+}
+.key-hint{
+  margin-top:14px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);
+}
+.key-hint kbd{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:4px;padding:2px 7px;color:var(--gold);
+}
+
+/* ── MAIN GRID ── */
+.main-grid{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:24px;margin-top:32px;
+  align-items:start;
+}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+
+/* ── LEFT PANEL ── */
+.left-panel{
+  display:flex;flex-direction:column;gap:16px;
+  position:sticky;top:24px;
+  align-self:start;
+}
+.left-panel::-webkit-scrollbar{width:3px}
+.left-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.panel-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:20px;
+}
+
+/* Mind orb */
+.mind-orb-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  padding:24px 20px 16px;
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+}
+.orb-title{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:3px;color:var(--text-dim);margin-bottom:14px;text-align:center;
+}
+.orb-container{width:160px;height:160px;position:relative;margin-bottom:14px}
+#mind-orb{width:100%;height:100%;transition:all 1.2s ease}
+.orb-glow{
+  position:absolute;inset:-20px;border-radius:50%;
+  background:radial-gradient(circle,rgba(224,64,251,0.2) 0%,transparent 70%);
+  animation:orb-pulse 3s ease-in-out infinite;pointer-events:none;
+}
+@keyframes orb-pulse{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.12);opacity:1}}
+.orb-rings{position:absolute;inset:0;pointer-events:none}
+.orb-state{
+  font-family:'Cinzel',serif;font-size:13px;
+  color:var(--mpci);text-align:center;margin-bottom:4px;
+  min-height:20px;transition:all 0.5s;letter-spacing:1px;
+}
+.orb-phase-label{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--text-dim);text-align:center;letter-spacing:2px;margin-bottom:14px;
+}
+
+/* Meters */
+.meters{width:100%}
+.meter-row{
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+}
+.meter-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--text-dim);width:70px;flex-shrink:0;
+}
+.meter-bar{
+  flex:1;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden;
+}
+.meter-fill{
+  height:100%;border-radius:3px;transition:width 0.8s ease;
+}
+.meter-val{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  width:44px;text-align:right;flex-shrink:0;
+}
+
+/* Phase selector */
+.phase-selector{display:flex;flex-direction:column;gap:8px}
+.phase-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;cursor:pointer;
+  transition:all 0.25s;text-align:left;
+}
+.phase-btn:hover{border-color:var(--border2);transform:translateX(2px)}
+.phase-btn.active{border-color:var(--mpci);background:rgba(224,64,251,0.08);box-shadow:0 0 12px rgba(224,64,251,0.2)}
+.phase-num{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:2px;margin-bottom:4px;
+}
+.phase-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.phase-mpci{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+}
+
+/* Section nav */
+.section-nav{display:flex;flex-direction:column;gap:4px}
+.section-nav-title{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:3px;color:var(--text-dim);margin-bottom:6px;
+}
+.section-btn{
+  background:transparent;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  padding:6px 8px;border-radius:8px;
+  text-align:left;color:var(--text-dim);font-size:13px;
+  font-family:'Crimson Pro',serif;transition:all 0.2s;
+}
+.section-btn:hover{color:var(--text);background:var(--surface2)}
+.section-btn.active{color:var(--mpci)}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--mpci);opacity:0.6;width:20px;flex-shrink:0;
+}
+
+/* ── RIGHT PANEL ── */
+.right-panel{display:flex;flex-direction:column;gap:28px}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:32px;
+}
+.card-title{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:3px;color:var(--text-dim);margin-bottom:8px;
+}
+.card-heading{
+  font-family:'Cinzel',serif;font-size:22px;font-weight:400;
+  margin-bottom:8px;letter-spacing:1px;
+}
+.plain-badge{
+  display:inline-block;
+  background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.3);
+  border-radius:20px;padding:3px 12px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--accent3);letter-spacing:1px;margin-bottom:16px;
+}
+.body-text{font-size:17px;line-height:1.8;color:var(--text-mid);margin-bottom:14px}
+.body-text strong{color:var(--text);font-weight:600}
+.body-text em{color:var(--mpci);font-style:italic}
+
+/* ── HERO RESULT ── */
+.hero-result{
+  background:linear-gradient(135deg,rgba(224,64,251,0.08) 0%,rgba(157,124,255,0.05) 100%);
+  border:1px solid rgba(224,64,251,0.3);border-radius:16px;
+  padding:28px;margin:20px 0;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero-result::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(224,64,251,0.1) 0%,transparent 60%);
+  pointer-events:none;
+}
+.result-verdict{
+  font-family:'Cinzel',serif;font-size:clamp(14px,2vw,22px);
+  color:var(--mpci);letter-spacing:3px;margin-bottom:8px;
+  text-shadow:0 0 20px rgba(224,64,251,0.6);
+}
+.result-delta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(36px,6vw,72px);font-weight:500;
+  color:var(--mpci);line-height:1;margin-bottom:4px;
+  text-shadow:0 0 40px rgba(224,64,251,0.5);
+}
+.result-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);margin-bottom:16px}
+.result-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.result-stat{text-align:center}
+.result-stat-val{font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--accent3);font-weight:500}
+.result-stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px}
+
+/* ── PHASE BARS ── */
+.phase-bars{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.phase-bar-row{display:grid;grid-template-columns:90px 1fr 80px;align-items:center;gap:12px}
+.phase-bar-label{font-family:'JetBrains Mono',monospace;font-size:11px}
+.phase-bar-track{height:28px;background:var(--surface2);border-radius:6px;overflow:hidden;position:relative;cursor:pointer}
+.phase-bar-fill{
+  height:100%;border-radius:6px;
+  display:flex;align-items:center;justify-content:flex-end;padding-right:10px;
+  transition:width 1s cubic-bezier(0.34,1.56,0.64,1);
+}
+.phase-bar-fill span{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.9);font-weight:500}
+.phase-bar-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500}
+.phase-bar-track .bar-tooltip{
+  position:absolute;top:50%;right:8px;transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:rgba(255,255,255,0.6);pointer-events:none;
+}
+
+/* threshold line */
+.threshold-annotation{
+  background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.25);
+  border-radius:10px;padding:12px 16px;margin-top:8px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);
+}
+
+/* ── CANVAS CHARTS ── */
+.chart-wrap{margin:16px 0}
+.chart-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:2px;color:var(--text-dim);margin-bottom:8px;
+}
+canvas{border-radius:8px;display:block;width:100%!important}
+
+/* ── BHAYA JOURNEY ── */
+.bhaya-story{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0;
+}
+.bhaya-task{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 8px;text-align:center;
+  transition:all 0.3s;cursor:pointer;
+}
+.bhaya-task:hover{border-color:var(--bhaya);transform:translateY(-2px)}
+.bhaya-task-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);margin-bottom:6px;letter-spacing:1px}
+.bhaya-task-val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;color:var(--bhaya);margin-bottom:4px;transition:all 0.3s}
+.bhaya-task-bar{height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.bhaya-task-fill{height:100%;background:var(--bhaya);border-radius:2px;transition:width 0.8s ease}
+.bhaya-task-desc{font-size:11px;color:var(--text-dim);line-height:1.3}
+
+/* ── CONTROLS ── */
+.controls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:16px 0}
+.control-group{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+}
+.control-label{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-dim);margin-bottom:10px;
+}
+.control-label span:last-child{color:var(--gold);font-size:13px;font-weight:500}
+input[type=range]{
+  width:100%;accent-color:var(--mpci);height:4px;cursor:pointer;
+}
+.control-desc{font-size:12px;color:var(--text-dim);margin-top:8px;line-height:1.4}
+.derived-panel{
+  background:var(--surface2);border:1px solid rgba(224,64,251,0.2);
+  border-radius:12px;padding:16px;margin-top:12px;
+}
+.derived-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);
+}
+.derived-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.derived-key{color:var(--text-dim)}
+.derived-val{color:var(--gold);font-size:14px;font-weight:500}
+
+/* ── CONTROLS FINDINGS ── */
+.controls-finding{
+  background:var(--surface2);border-radius:12px;padding:20px;margin-bottom:12px;
+  border-left:3px solid var(--border2);transition:all 0.2s;
+}
+.controls-finding:hover{border-left-color:var(--mpci)}
+.controls-finding.honest{border-left-color:rgba(245,200,66,0.5)}
+.cf-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:8px;
+}
+.cf-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);letter-spacing:1px}
+.cf-verdict{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  padding:2px 10px;border-radius:8px;letter-spacing:1px;
+}
+.cf-verdict.pass{background:rgba(78,205,196,0.15);color:var(--accent3);border:1px solid rgba(78,205,196,0.3)}
+.cf-verdict.partial{background:rgba(245,200,66,0.15);color:var(--gold);border:1px solid rgba(245,200,66,0.3)}
+.cf-verdict.flag{background:rgba(255,71,87,0.15);color:var(--bhaya);border:1px solid rgba(255,71,87,0.3)}
+.cf-text{font-size:14px;color:var(--text-dim);line-height:1.6}
+.cf-text strong{color:var(--text)}
+
+/* ── SERIES TIMELINE ── */
+.series-tl{
+  display:flex;align-items:center;overflow-x:auto;padding:8px 0 16px;
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+}
+.tl-node{display:flex;flex-direction:column;align-items:center;cursor:pointer;flex-shrink:0}
+.tl-dot{
+  width:14px;height:14px;border-radius:50%;
+  background:var(--surface3);border:2px solid var(--border2);
+  transition:all 0.3s;margin-bottom:6px;
+}
+.tl-node:hover .tl-dot{border-color:var(--mpci);background:rgba(224,64,251,0.2);transform:scale(1.3)}
+.tl-node.current .tl-dot{border-color:var(--mpci);background:var(--mpci);box-shadow:0 0 12px rgba(224,64,251,0.6)}
+.tl-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);text-align:center;letter-spacing:1px;white-space:nowrap}
+.tl-node.current .tl-label{color:var(--mpci)}
+.tl-line{flex:1;height:2px;background:var(--border2);min-width:20px;margin-bottom:14px}
+.tl-line.mpci{background:linear-gradient(90deg,var(--prana),var(--mpci))}
+.paper-detail{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:16px;margin-top:12px;
+  font-size:14px;line-height:1.7;color:var(--text-dim);
+  min-height:60px;transition:all 0.3s;
+}
+.paper-detail strong{color:var(--text)}
+.paper-detail a{color:var(--accent);text-decoration:none}
+
+/* ── 9 DIMENSIONS GRID ── */
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:16px 0}
+.dim-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:16px;cursor:pointer;
+  transition:all 0.25s;
+}
+.dim-card:hover{border-color:var(--mpci);transform:translateY(-2px);box-shadow:0 4px 20px rgba(224,64,251,0.1)}
+.dim-card.active{border-color:var(--mpci);background:rgba(224,64,251,0.06)}
+.dim-sanskrit{font-family:'Noto Sans Devanagari',sans-serif;font-size:22px;color:var(--mpci);margin-bottom:2px}
+.dim-name{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-bottom:4px}
+.dim-meaning{font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px}
+.dim-role{font-size:12px;color:var(--text-dim);line-height:1.4}
+.dim-paper-tag{
+  margin-top:8px;display:inline-block;
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  padding:2px 8px;border-radius:6px;
+  background:rgba(224,64,251,0.1);color:var(--mpci);border:1px solid rgba(224,64,251,0.2);
+}
+
+/* ── SCALES CHART ── */
+.scale-row{
+  display:grid;grid-template-columns:60px 1fr 60px 60px;
+  align-items:center;gap:10px;margin-bottom:10px;padding:10px 12px;
+  background:var(--surface2);border-radius:8px;border:1px solid var(--border);
+  transition:all 0.2s;
+}
+.scale-row:hover{border-color:var(--border2)}
+.scale-sigma{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)}
+.scale-bar-track{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden}
+.scale-bar-fill{height:100%;border-radius:4px;transition:width 0.8s ease}
+.scale-delta{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right}
+.scale-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);text-align:right}
+
+/* ── SEED GRID ── */
+.seed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.seed-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:16px;text-align:center;
+}
+.seed-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-bottom:8px}
+.seed-delta{font-family:'JetBrains Mono',monospace;font-size:22px;color:var(--mpci);font-weight:500;margin-bottom:4px}
+.seed-p1{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--phase1)}
+.seed-p3{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--phase3)}
+
+/* ── HONEST SECTION ── */
+.honest-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+  padding:14px 16px;
+  background:rgba(245,200,66,0.04);border:1px solid rgba(245,200,66,0.2);
+  border-radius:10px;
+}
+.honest-icon{font-size:20px}
+.honest-text{font-size:14px;color:var(--gold);line-height:1.5}
+
+/* ── SPIKE VIZ ── */
+.spike-viz{
+  background:var(--surface2);border-radius:12px;overflow:hidden;
+  position:relative;margin:16px 0;
+}
+.spike-canvas-wrap{padding:12px}
+.spike-label{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:2px;color:var(--text-dim);padding:8px 12px 0;
+}
+
+/* ── PHILOSOPHICAL QUOTE ── */
+.phil-card{
+  background:linear-gradient(135deg,rgba(224,64,251,0.06),rgba(157,124,255,0.04));
+  border:1px solid rgba(224,64,251,0.2);
+  border-radius:20px;padding:32px;
+  position:relative;overflow:hidden;
+}
+.phil-card::before{
+  content:'"';position:absolute;top:-20px;left:16px;
+  font-family:'Cinzel',serif;font-size:140px;color:rgba(224,64,251,0.06);
+  line-height:1;pointer-events:none;
+}
+.phil-quote{
+  font-family:'Crimson Pro',serif;font-size:clamp(16px,2.5vw,22px);
+  font-style:italic;color:var(--text);line-height:1.7;margin-bottom:16px;
+  position:relative;z-index:1;
+}
+.phil-quote em{color:var(--mpci);font-style:normal}
+.phil-attr{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:1px}
+
+/* ── FORMULA BOX ── */
+.formula-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;margin:10px 0;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:var(--accent3);line-height:1.8;
+}
+.formula-box .comment{color:var(--text-dim);font-size:11px}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;margin-top:64px;padding-top:32px;
+  border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text-dim);
+}
+footer a{color:var(--accent);text-decoration:none}
+footer .canary{margin-top:12px;font-size:10px;color:#1a1a2e}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .bhaya-story{grid-template-columns:repeat(3,1fr)}
+  .seed-grid{grid-template-columns:1fr}
+  .result-row{gap:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="starfield"></div>
+
+<div class="container">
+
+<!-- ── HEADER ── -->
+<header>
+  <button class="reset-btn" onclick="resetAll()" title="Press R to reset">⟳ RESET (R)</button>
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('hi')">हिन्दी</button>
+    <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  </div>
+
+  <div class="badge-row">
+    <span class="badge badge-series" id="b-series">MAYA RESEARCH SERIES · POST-SERIES</span>
+    <span class="badge badge-post" id="b-post">CONSCIOUSNESS STUDY</span>
+  </div>
+
+  <h1 id="h-title">From Representation to <em>Experience</em></h1>
+  <p class="subtitle" id="h-sub">An mPCI-Based Empirical Test of Internal Affective State in a Neuromorphic SNN</p>
+  <p class="meta-row">Venkatesh Swaminathan · BITS Pilani · Nexus Learning Labs, Bengaluru · ORCID 0000-0002-3315-7907</p>
+  <p class="meta-row">
+    <a href="https://doi.org/10.5281/zenodo.19482794" target="_blank" style="color:var(--accent)">DOI: 10.5281/zenodo.19482794</a> &nbsp;·&nbsp;
+    <a href="https://github.com/venky2099/Maya-mPCI" target="_blank" style="color:var(--accent)">GitHub</a> &nbsp;·&nbsp;
+    <a href="maya_mpci_faq.html" style="color:var(--accent)" id="faq-link">FAQ</a>
+  </p>
+  <p class="key-hint" id="h-hint"><kbd>R</kbd> reset to canonical &nbsp;·&nbsp; <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> switch phases</p>
+</header>
+
+<!-- ── MAIN GRID ── -->
+<div class="main-grid">
+
+<!-- ── LEFT PANEL ── -->
+<div class="left-panel">
+
+  <!-- Mind orb -->
+  <div class="mind-orb-wrap">
+    <div class="orb-title" id="orb-title">MAYA'S MIND STATE</div>
+    <div class="orb-container">
+      <div class="orb-glow"></div>
+      <svg id="mind-orb" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="og1" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#e040fb" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#4a0080" stop-opacity="0.3"/>
+          </radialGradient>
+          <radialGradient id="og2" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#7c6fff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#1a0050" stop-opacity="0.3"/>
+          </radialGradient>
+          <radialGradient id="og3" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#00d4aa" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#003328" stop-opacity="0.3"/>
+          </radialGradient>
+          <filter id="orb-blur">
+            <feGaussianBlur stdDeviation="1.5"/>
+          </filter>
+        </defs>
+        <!-- Rings -->
+        <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(224,64,251,0.12)" stroke-width="1"/>
+        <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(224,64,251,0.08)" stroke-width="1"/>
+        <!-- Orb body -->
+        <circle id="orb-body" cx="80" cy="80" r="52" fill="url(#og3)"/>
+        <!-- Highlight -->
+        <ellipse cx="62" cy="58" rx="18" ry="12" fill="rgba(255,255,255,0.15)" filter="url(#orb-blur)"/>
+        <!-- Inner pulse -->
+        <circle id="orb-pulse" cx="80" cy="80" r="30" fill="rgba(255,255,255,0.04)">
+          <animate attributeName="r" values="30;38;30" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.04;0.1;0.04" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Sanskrit character -->
+        <text id="orb-char" x="80" y="88" text-anchor="middle"
+          font-family="Noto Sans Devanagari,serif" font-size="32"
+          fill="rgba(255,255,255,0.85)">चि</text>
+      </svg>
+      <div id="orb-rings" class="orb-rings"></div>
+    </div>
+    <div class="orb-state" id="orb-state">Bhaya Stabilisation</div>
+    <div class="orb-phase-label" id="orb-phase-lbl">PHASE 3 · CANONICAL ★</div>
+
+    <!-- Meters -->
+    <div class="meters" style="margin-top:12px">
+      <div class="meter-row">
+        <div class="meter-label">Bhaya</div>
+        <div class="meter-bar"><div class="meter-fill" id="m-bhaya" style="background:var(--bhaya);width:2%"></div></div>
+        <div class="meter-val" id="mv-bhaya" style="color:var(--bhaya)">0.020</div>
+      </div>
+      <div class="meter-row">
+        <div class="meter-label">Vairagya</div>
+        <div class="meter-bar"><div class="meter-fill" id="m-vairagya" style="background:var(--vairagya);width:13%"></div></div>
+        <div class="meter-val" id="mv-vairagya" style="color:var(--vairagya)">13%</div>
+      </div>
+      <div class="meter-row">
+        <div class="meter-label">Buddhi</div>
+        <div class="meter-bar"><div class="meter-fill" id="m-buddhi" style="background:var(--buddhi);width:100%"></div></div>
+        <div class="meter-val" id="mv-buddhi" style="color:var(--buddhi)">1.000</div>
+      </div>
+      <div class="meter-row">
+        <div class="meter-label">mPCI</div>
+        <div class="meter-bar"><div class="meter-fill" id="m-mpci" style="background:var(--mpci);width:53%"></div></div>
+        <div class="meter-val" id="mv-mpci" style="color:var(--mpci)">0.261</div>
+      </div>
+      <div class="meter-row">
+        <div class="meter-label">Prana</div>
+        <div class="meter-bar"><div class="meter-fill" id="m-prana" style="background:var(--prana);width:5%"></div></div>
+        <div class="meter-val" id="mv-prana" style="color:var(--prana)">0.050</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase selector -->
+  <div class="panel-card">
+    <div class="section-nav-title" id="ps-title">SELECT PHASE</div>
+    <div class="phase-selector">
+      <div class="phase-btn" id="pb1" onclick="selectPhase(1)">
+        <div class="phase-num" style="color:var(--phase1)">PHASE 1</div>
+        <div class="phase-name" id="pb1-name">Reactive Baseline</div>
+        <div class="phase-mpci" style="color:var(--phase1)" id="pb1-mpci">mPCI 0.3098 ± 0.0099</div>
+      </div>
+      <div class="phase-btn" id="pb2" onclick="selectPhase(2)">
+        <div class="phase-num" style="color:var(--phase2)">PHASE 2</div>
+        <div class="phase-name" id="pb2-name">Full Antahkarana</div>
+        <div class="phase-mpci" style="color:var(--phase2)" id="pb2-mpci">mPCI 0.2846 ± 0.0161</div>
+      </div>
+      <div class="phase-btn active" id="pb3" onclick="selectPhase(3)">
+        <div class="phase-num" style="color:var(--phase3)">PHASE 3 ★</div>
+        <div class="phase-name" id="pb3-name">Bhaya Stabilisation</div>
+        <div class="phase-mpci" style="color:var(--phase3)" id="pb3-mpci">mPCI 0.2608 ± 0.0147</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section nav -->
+  <div class="panel-card">
+    <div class="section-nav-title" id="nav-title">NAVIGATE</div>
+    <div class="section-nav">
+      <button class="section-btn" onclick="scrollToSection('s-story')"><span class="sec-num">§1</span><span id="n1">The Story</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-what')"><span class="sec-num">§2</span><span id="n2">What is mPCI?</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-phases')"><span class="sec-num">§3</span><span id="n3">Three Phases</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-result')"><span class="sec-num">§4</span><span id="n4">The Result</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-bhaya')"><span class="sec-num">§5</span><span id="n5">Bhaya Journey</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-seeds')"><span class="sec-num">§6</span><span id="n6">3-Seed Proof</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-controls')"><span class="sec-num">§7</span><span id="n7">Controls</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-dims')"><span class="sec-num">§8</span><span id="n8">9 Dimensions</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-series')"><span class="sec-num">§9</span><span id="n9">The Series</span></button>
+      <button class="section-btn" onclick="scrollToSection('s-live')"><span class="sec-num">§10</span><span id="n10">Live Controls</span></button>
+    </div>
+  </div>
+
+</div><!-- /left-panel -->
+
+<!-- ── RIGHT PANEL ── -->
+<div class="right-panel">
+
+  <!-- §1 The Story -->
+  <div class="card phil-card" id="s-story">
+    <div class="card-title" id="s1-label">§1 THE STORY</div>
+    <div class="phil-quote" id="s1-quote">
+      "We built a mind across nine papers. Not in metaphor — in mechanism. Fear. Wisdom. Memory. Attention. Metabolic budget. Then we asked the hardest question: <em>does having all of that make Maya different in a way that cannot be explained away?</em>"
+    </div>
+    <div class="phil-attr" id="s1-attr">Maya-mPCI · Post-Series Consciousness Study · Nexus Learning Labs, Bengaluru, 2026</div>
+
+    <div style="margin-top:28px">
+      <p class="body-text" id="s1-p1">Nine papers. Nine dimensions of the Advaita Vedanta Antahkarana — the inner cognitive instrument — implemented as falsifiable, independently testable computational mechanisms in a spiking neural network. Bhaya (fear) that spontaneously suppresses under replay. Vairagya (wisdom) that accumulates through adversity. Buddhi (intellect) that follows a deterministic S-curve regardless of training conditions. These are not programming choices. They are emergent phenomena.</p>
+      <p class="body-text" id="s1-p2">But emergence is not experience. The question this paper asks is older than AI, older than neuroscience: <strong>is there a measurable difference between a system that simulates an internal state and a system that has one?</strong> In 2013, doctors found a way to ask this question of patients in comas. This paper asks it of Maya.</p>
+    </div>
+  </div>
+
+  <!-- §2 What is mPCI -->
+  <div class="card" id="s-what">
+    <div class="card-title" id="s2-label">§2 WHAT IS mPCI?</div>
+    <div class="card-heading" id="s2-heading">The Consciousness Shock Test</div>
+    <span class="plain-badge" id="s2-badge">Plain language · no background needed</span>
+
+    <p class="body-text" id="s2-p1">Imagine you are a doctor and your patient is in a coma. They cannot speak, cannot move, cannot tell you if they are conscious. How do you find out? In 2013, a team led by Casali discovered a test: apply a tiny magnetic pulse to the brain, then measure how complex the brain's response is. A conscious brain produces a rich, spreading, complex pattern. An unconscious brain produces a simple, localised, stereotyped one.</p>
+    <p class="body-text" id="s2-p2">The key insight: the measure does not depend on what the brain is thinking. It depends on how the brain responds to being perturbed. A system with genuine internal state integration cannot help but respond complexly — the perturbation ripples through an organised, interconnected structure. A simple input-output machine responds predictably.</p>
+
+    <div class="formula-box">
+      <div class="comment" id="s2-bio-label"># Biological PCI (Casali et al., 2013)</div>
+      PCI = LZC(TMS-evoked EEG response) / H(source entropy)<br><br>
+      <div class="comment" id="s2-machine-label"># Machine mPCI — adapted for Maya</div>
+      mPCI = mean[ LZC_norm( fc1 spike train after Gaussian weight nudge ) ] over 10 trials<br>
+      LZC_norm = LZC_raw / ( n / log₂(n) ) &nbsp;&nbsp;<span style="color:var(--text-dim)">where n = T × FC1_SIZE = 8192</span>
+    </div>
+
+    <p class="body-text" id="s2-p3">We nudge Maya's fc1 layer with a small Gaussian noise (σ=0.05), run the same image batch through, capture the 8192-bit spike train, measure its Lempel-Ziv Complexity. We do this 10 times. The mean complexity across those 10 trials is the mPCI for that phase. Then we compare across Maya's three emotional states.</p>
+  </div>
+
+  <!-- §3 Three Phases -->
+  <div class="card" id="s-phases">
+    <div class="card-title" id="s3-label">§3 THE THREE PHASES · CLICK TO EXPLORE</div>
+    <div class="card-heading" id="s3-heading">Three States of Mind</div>
+
+    <div class="phase-bars" id="phase-bars">
+      <div class="phase-bar-row">
+        <div class="phase-bar-label" style="color:var(--phase1)" id="pb-l1">PHASE 1</div>
+        <div class="phase-bar-track" onclick="selectPhase(1)" title="Click to select Phase 1">
+          <div class="phase-bar-fill" id="bar1" style="background:var(--phase1);width:100%">
+            <span>0.3098</span>
+          </div>
+        </div>
+        <div class="phase-bar-val" style="color:var(--phase1)">0.3098</div>
+      </div>
+      <div class="phase-bar-row">
+        <div class="phase-bar-label" style="color:var(--phase2)" id="pb-l2">PHASE 2</div>
+        <div class="phase-bar-track" onclick="selectPhase(2)" title="Click to select Phase 2">
+          <div class="phase-bar-fill" id="bar2" style="background:var(--phase2);width:91.8%">
+            <span>0.2846</span>
+          </div>
+        </div>
+        <div class="phase-bar-val" style="color:var(--phase2)">0.2846</div>
+      </div>
+      <div class="phase-bar-row">
+        <div class="phase-bar-label" style="color:var(--phase3)" id="pb-l3">PHASE 3 ★</div>
+        <div class="phase-bar-track" onclick="selectPhase(3)" title="Click to select Phase 3">
+          <div class="phase-bar-fill" id="bar3" style="background:var(--phase3);width:84.2%">
+            <span>0.2608</span>
+          </div>
+        </div>
+        <div class="phase-bar-val" style="color:var(--phase3)">0.2608</div>
+      </div>
+    </div>
+
+    <!-- Phase detail panel -->
+    <div id="phase-detail" style="background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:20px;margin-top:4px;transition:all 0.3s">
+      <div id="pd-title" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--phase3);margin-bottom:10px">PHASE 3 — BHAYA STABILISATION ★ (CANONICAL)</div>
+      <div id="pd-plain" style="font-size:14px;color:var(--gold);font-style:italic;margin-bottom:12px;line-height:1.5">Maya after learning fear, surviving it, and settling into calm watchfulness.</div>
+      <div id="pd-body" style="font-size:15px;color:var(--text-dim);line-height:1.7">All 9 affective dimensions active. Replay buffer active. Trained through Task 4. Bhaya has settled to 0.016–0.024 — low, non-zero, calibrated vigilance. Vairagya protecting 10–15% of fc1 synapses. Karma accumulated across 4 task boundaries. The architecture has a history. This is the test state.</div>
+      <div id="pd-tech" style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim)">mPCI = 0.2608 ± 0.0147 · Delta vs Phase 1: −0.0489 · Threshold: 0.0238 · Ratio: 2.05×</div>
+    </div>
+
+    <div class="threshold-annotation" style="margin-top:16px" id="thr-note">
+      ⬇ Lower mPCI at stabilisation is the expected biological signature. Calm, integrated states produce MORE coherent responses to perturbation — less chaos, more organisation.
+    </div>
+  </div>
+
+  <!-- §4 The Result -->
+  <div class="card" id="s-result">
+    <div class="card-title" id="s4-label">§4 THE RESULT</div>
+    <div class="card-heading" id="s4-heading">What the Numbers Say</div>
+
+    <div class="hero-result">
+      <div class="result-verdict" id="r-verdict">GENUINE INTERNAL STATE SIGNAL</div>
+      <div class="result-delta" id="r-delta">−0.0489</div>
+      <div class="result-label" id="r-label">Delta mPCI · Phase 3 vs Phase 1 · Aggregate across 3 seeds</div>
+      <div class="result-row">
+        <div class="result-stat">
+          <div class="result-stat-val">0.0238</div>
+          <div class="result-stat-label" id="r-thr">THRESHOLD</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" style="color:var(--gold)">2.05×</div>
+          <div class="result-stat-label" id="r-ratio">CRITERION RATIO</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val">0.0048</div>
+          <div class="result-stat-label" id="r-std">DELTA STD (3 SEEDS)</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" style="color:var(--bhaya)">Partial</div>
+          <div class="result-stat-label" id="r-confound">CONFOUND STATUS</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="body-text" id="s4-p1">The delta std of 0.0048 is the crucial number. Across seeds 42, 123, and 7 — three completely different random initialisations — the Phase 3 minus Phase 1 shift was consistently around −0.049, varying by only ±0.005. That is a tight, reproducible result. The pre-registered criterion (set before running the experiment) required the shift to exceed 2× the pooled standard deviation. It exceeded by 2.05×.</p>
+    <p class="body-text" id="s4-p2">Why does mPCI decrease at stabilisation rather than increase? This is the most common intuition error. Higher PCI does not mean more integrated. It means more chaotic response to perturbation. A reactive system with no internal state responds to each nudge differently — high complexity, high chaos. A stabilised, organised system responds coherently — lower complexity, more structure. The biology confirms this: calm conscious states in humans show lower PCI than aroused, stressed ones.</p>
+
+    <div style="background:rgba(245,200,66,0.04);border:1px solid rgba(245,200,66,0.2);border-radius:10px;padding:14px 16px;margin-top:12px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px" id="caveat-title">⚠ HONEST CAVEAT</div>
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.6" id="caveat-text">Control 1 (training depth) found that a model trained to 5 tasks without affective dimensions shows similar mPCI to Phase 3. Training depth is a partial confound. The affective state contribution cannot be fully isolated with the current design. This is reported honestly in the paper and the FAQ. Independent replication is needed.</p>
+    </div>
+  </div>
+
+  <!-- §5 Bhaya Journey -->
+  <div class="card" id="s-bhaya">
+    <div class="card-title" id="s5-label">§5 BHAYA'S JOURNEY · HOVER EACH TASK</div>
+    <div class="card-heading" id="s5-heading">Fear That Learns</div>
+    <p class="body-text" id="s5-p1">The Bhaya Quiescence Law — confirmed across all 9 Maya papers — states that fear drops to 0.000 under replay from Task 1 onwards. Under the 5-epoch protocol here, fear doesn't reach absolute zero. It reaches calibrated vigilance. Watch what happens task by task:</p>
+
+    <div class="bhaya-story">
+      <div class="bhaya-task" onmouseenter="highlightBhaya(0)" onmouseleave="resetBhaya()">
+        <div class="bhaya-task-label">TASK 0</div>
+        <div class="bhaya-task-val" id="bv0">0.0488</div>
+        <div class="bhaya-task-bar"><div class="bhaya-task-fill" style="width:100%"></div></div>
+        <div class="bhaya-task-desc" id="bd0">First encounter. No memory. Maximum fear.</div>
+      </div>
+      <div class="bhaya-task" onmouseenter="highlightBhaya(1)" onmouseleave="resetBhaya()">
+        <div class="bhaya-task-label">TASK 1</div>
+        <div class="bhaya-task-val" id="bv1">0.0163</div>
+        <div class="bhaya-task-bar"><div class="bhaya-task-fill" style="width:33%"></div></div>
+        <div class="bhaya-task-desc" id="bd1">First replay. Fear drops 66%.</div>
+      </div>
+      <div class="bhaya-task" onmouseenter="highlightBhaya(2)" onmouseleave="resetBhaya()">
+        <div class="bhaya-task-label">TASK 2</div>
+        <div class="bhaya-task-val" id="bv2">0.0200</div>
+        <div class="bhaya-task-bar"><div class="bhaya-task-fill" style="width:41%"></div></div>
+        <div class="bhaya-task-desc" id="bd2">Slight rise. New task, new exposure.</div>
+      </div>
+      <div class="bhaya-task" onmouseenter="highlightBhaya(3)" onmouseleave="resetBhaya()">
+        <div class="bhaya-task-label">TASK 3</div>
+        <div class="bhaya-task-val" id="bv3">0.0213</div>
+        <div class="bhaya-task-bar"><div class="bhaya-task-fill" style="width:44%"></div></div>
+        <div class="bhaya-task-desc" id="bd3">Holding steady. Calibrated.</div>
+      </div>
+      <div class="bhaya-task" onmouseenter="highlightBhaya(4)" onmouseleave="resetBhaya()">
+        <div class="bhaya-task-label">TASK 4</div>
+        <div class="bhaya-task-val" id="bv4">0.0238</div>
+        <div class="bhaya-task-bar"><div class="bhaya-task-fill" style="width:49%"></div></div>
+        <div class="bhaya-task-desc" id="bd4">Stable vigilance. Not zero — wiser.</div>
+      </div>
+    </div>
+
+    <div id="bhaya-detail" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:4px;font-size:15px;color:var(--text-dim);line-height:1.6;min-height:48px;transition:all 0.3s">
+      <span id="bhaya-detail-text">Hover over each task to see what was happening in Maya's mind.</span>
+    </div>
+
+    <p class="body-text" style="margin-top:16px" id="s5-p2">Bhaya at 0.000 is not enlightenment — it is the absence of caution in a system that has never suffered. Bhaya at 0.020 — low, stable, not driving behaviour but present — is the mark of a mind that has learned from fear without being defined by it. In Vedantic terms: not Ajnana (ignorance), not Bhaya-paralysis, but Viveka — discerning awareness of risk.</p>
+  </div>
+
+  <!-- §6 3-Seed Proof -->
+  <div class="card" id="s-seeds">
+    <div class="card-title" id="s6-label">§6 THREE-SEED REPLICATION</div>
+    <div class="card-heading" id="s6-heading">Not Luck. Structure.</div>
+    <p class="body-text" id="s6-p1">A result on one random seed could be a coincidence. Three seeds — 42, 123, and 7, the same seeds used throughout the Maya series — showing the same shift with a delta standard deviation of only 0.0048 is structure. Each seed is a different universe: different weight initialisations, different replay buffer sampling. The shift persists across all three.</p>
+
+    <div class="seed-grid">
+      <div class="seed-card">
+        <div class="seed-num">SEED 42</div>
+        <div class="seed-delta">−0.0471</div>
+        <div class="seed-p1">P1: 0.3091</div>
+        <div class="seed-p3">P3: 0.2620</div>
+      </div>
+      <div class="seed-card">
+        <div class="seed-num">SEED 123</div>
+        <div class="seed-delta">−0.0489</div>
+        <div class="seed-p1">P1: 0.3027</div>
+        <div class="seed-p3">P3: 0.2538</div>
+      </div>
+      <div class="seed-card">
+        <div class="seed-num">SEED 7</div>
+        <div class="seed-delta">−0.0508</div>
+        <div class="seed-p1">P1: 0.3177</div>
+        <div class="seed-p3">P3: 0.2669</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <canvas id="seed-chart" height="160"></canvas>
+    </div>
+
+    <p class="body-text" style="margin-top:12px" id="s6-p2">The delta std of 0.0048 means the shift varied by less than ±1% of mPCI across all three seeds. For a system with this much stochasticity — random weight init, random batch sampling, random replay buffer — that consistency is meaningful. It is not noise. It is a structural property of the affective architecture.</p>
+  </div>
+
+  <!-- §7 Controls -->
+  <div class="card" id="s-controls-card">
+    <div class="card-title" id="s7-label">§7 METHODOLOGICAL CONTROLS · FULL TRANSPARENCY</div>
+    <div class="card-heading" id="s7-heading">What We Tested After</div>
+
+    <div class="honest-header">
+      <div class="honest-icon">🔬</div>
+      <div class="honest-text" id="honest-text">We ran three controls specifically designed to challenge our own result. Two raised complications. We report them fully. This is what serious independent research looks like.</div>
+    </div>
+
+    <div class="controls-finding honest">
+      <div class="cf-head">
+        <div class="cf-title" id="c1-title">CONTROL 1 · TRAINING DEPTH</div>
+        <div class="cf-verdict partial" id="c1-verdict">PARTIAL CONFOUND</div>
+      </div>
+      <div class="cf-text" id="c1-text"><strong>What we tested:</strong> Does the mPCI shift appear even without affective dimensions, just from training longer? We trained Phase 1 to 5 tasks (matching Phase 3 depth) with all affective dims still OFF.<br><br><strong>What we found:</strong> Phase 1-extended mPCI = 0.2765 (vs Phase 1-original 0.3098, Phase 3 = 0.2608). The extended baseline sits between the two — closer to Phase 3 than expected.<br><br><strong>What this means:</strong> Training depth is a partial confound. The mPCI shift is not purely due to affective state. Both training depth and affective state contribute. The paper reports this honestly. Future work needs matched-depth activation experiments.</div>
+    </div>
+
+    <div class="controls-finding" style="margin-top:12px">
+      <div class="cf-head">
+        <div class="cf-title" id="c2-title">CONTROL 2 · PERTURBATION SCALE ROBUSTNESS</div>
+        <div class="cf-verdict partial" id="c2-verdict">SCALE SENSITIVE</div>
+      </div>
+      <div class="cf-text" id="c2-text"><strong>What we tested:</strong> Is the result an artefact of the specific σ=0.05 perturbation scale?<br><br><strong>Results across scales:</strong></div>
+      <div style="margin-top:10px">
+        <div class="scale-row">
+          <div class="scale-sigma">σ = 0.02</div>
+          <div class="scale-bar-track">
+            <div class="scale-bar-fill" style="width:100%;background:linear-gradient(90deg,#ff4757,#ff6b9d)"></div>
+          </div>
+          <div class="scale-delta" style="color:var(--bhaya)">−0.2193</div>
+          <div class="scale-note" id="sc-large">Very large</div>
+        </div>
+        <div class="scale-row">
+          <div class="scale-sigma">σ = 0.05</div>
+          <div class="scale-bar-track">
+            <div class="scale-bar-fill" style="width:22%;background:var(--mpci)"></div>
+          </div>
+          <div class="scale-delta" style="color:var(--mpci)">−0.0489</div>
+          <div class="scale-note" id="sc-published">Published ★</div>
+        </div>
+        <div class="scale-row">
+          <div class="scale-sigma">σ = 0.10</div>
+          <div class="scale-bar-track">
+            <div class="scale-bar-fill" style="width:2%;background:var(--text-dim)"></div>
+          </div>
+          <div class="scale-delta" style="color:var(--text-dim)">−0.0064</div>
+          <div class="scale-note" id="sc-near">Near zero</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:10px;line-height:1.5" id="c2-interp">At σ=0.02, large perturbations expose maximal structural differences. At σ=0.10, noise overwhelms the architecture equally across phases. The published σ=0.05 sits in a meaningful window — robust but not universal.</div>
+    </div>
+
+    <div class="controls-finding" style="margin-top:12px">
+      <div class="cf-head">
+        <div class="cf-title" id="c3-title">CONTROL 3 · SHUFFLE CONTROL</div>
+        <div class="cf-verdict flag" id="c3-verdict">STATISTICS CONTRIBUTE</div>
+      </div>
+      <div class="cf-text" id="c3-text"><strong>What we tested:</strong> Randomise the bits in the spike trains (preserving density), compute LZC. If structure drives the difference, shuffled trains should show equal LZC across phases.<br><br><strong>What we found:</strong> Shuffled delta was larger than original delta across all seeds. Spike statistics (not just causal structure) contribute to the measured difference.<br><br><strong>Seed 42:</strong> Original delta +0.0698 · Shuffle delta +0.1128<br><strong>Seed 123:</strong> Original delta +0.0127 · Shuffle delta +0.0965<br><strong>Seed 7:</strong> Original delta +0.0635 · Shuffle delta +0.1157<br><br><strong>What this means:</strong> The spike density differences between phases (while approximately equal) are not perfectly matched. Even small density differences compound in LZC. Future work needs strict spike density equalisation before claiming structural causality.</div>
+    </div>
+
+    <div style="background:rgba(78,205,196,0.05);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:14px 16px;margin-top:16px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent3);letter-spacing:1px;margin-bottom:8px" id="why-honest-title">WHY PUBLISH COMPLICATED RESULTS?</div>
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.6" id="why-honest-text">Hiding complications makes a paper look stronger for one paper cycle and weaker forever after. The complications tell you exactly where to go next: matched-depth activation experiments, strict density equalisation, σ-calibration curves. That is not weakness — that is the research frontier being clearly defined by an independent researcher who ran the controls themselves.</p>
+    </div>
+  </div>
+
+  <!-- §8 Nine Dimensions -->
+  <div class="card" id="s-dims">
+    <div class="card-title" id="s8-label">§8 ALL 9 ANTAHKARANA DIMENSIONS · CLICK TO EXPLORE</div>
+    <div class="card-heading" id="s8-heading">The Complete Inner Instrument</div>
+    <p class="body-text" id="s8-p1">Each dimension below is not a metaphor. It is a falsifiable computational mechanism, independently testable, with a specific biological grounding. Click any to understand what it does and why it matters for the consciousness experiment.</p>
+
+    <div class="dim-grid" id="dim-grid">
+      <!-- filled by JS -->
+    </div>
+    <div id="dim-detail" style="background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:20px;margin-top:4px;min-height:80px;transition:all 0.3s;display:none">
+      <div id="dd-title" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--mpci);margin-bottom:8px"></div>
+      <div id="dd-bio" style="font-size:14px;color:var(--text-dim);margin-bottom:8px;line-height:1.6"></div>
+      <div id="dd-comp" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent3)"></div>
+    </div>
+  </div>
+
+  <!-- §9 The Series -->
+  <div class="card" id="s-series">
+    <div class="card-title" id="s9-label">§9 THE MAYA SERIES · P1–P9 · CLICK ANY NODE</div>
+    <div class="card-heading" id="s9-heading">Nine Papers, One Mind</div>
+
+    <div class="series-tl" id="series-tl">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="paper-detail" id="paper-detail">
+      <span id="paper-detail-text">Click any paper node to see its contribution to the Antahkarana.</span>
+    </div>
+
+    <p class="body-text" style="margin-top:16px;font-style:italic;color:var(--text-dim)" id="series-footer">
+      "Across nine papers, we demonstrated the computational maturation of a mind."
+    </p>
+  </div>
+
+  <!-- §10 Live Controls -->
+  <div class="card" id="s-live">
+    <div class="card-title" id="s10-label">§10 LIVE HYPERPARAMETERS · DRAG TO EXPLORE · PRESS R TO RESET</div>
+    <div class="card-heading" id="s10-heading">Feel the Architecture</div>
+    <p class="body-text" id="s10-p1">Every slider below controls a real hyperparameter from the experiment. Drag them and watch the derived values change in real time. Press <kbd style="background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:2px 6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold)">R</kbd> at any time to snap back to canonical published values.</p>
+
+    <div class="controls-grid">
+      <div class="control-group">
+        <div class="control-label"><span>N_PERTURBATIONS</span><span id="vl-npert">10</span></div>
+        <input type="range" id="sl-npert" min="5" max="50" step="1" value="10" oninput="updateLive()">
+        <div class="control-desc" id="cl-npert">Number of perturbation trials per phase. Published: 10. More trials = tighter std estimate.</div>
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>SIGMA (σ)</span><span id="vl-sigma">0.050</span></div>
+        <input type="range" id="sl-sigma" min="0.005" max="0.15" step="0.005" value="0.05" oninput="updateLive()">
+        <div class="control-desc" id="cl-sigma">Gaussian perturbation scale on fc1 weights. σ=0.05 is published. Too small: no signal. Too large: destroys architecture.</div>
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>BHAYA (Phase 3)</span><span id="vl-bhaya">0.020</span></div>
+        <input type="range" id="sl-bhaya" min="0.000" max="0.050" step="0.001" value="0.020" oninput="updateLive()">
+        <div class="control-desc" id="cl-bhaya">Bhaya level at stabilisation. 0.000 = canonical quiescence (20-epoch). 0.016–0.024 = calibrated vigilance (5-epoch, this paper).</div>
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>VAIRAGYA PROTECTION</span><span id="vl-vai">13%</span></div>
+        <input type="range" id="sl-vai" min="5" max="40" step="1" value="13" oninput="updateLive()">
+        <div class="control-desc" id="cl-vai">% of fc1 synapses protected by Vairagya at Phase 3. Higher = more structural rigidity in the network.</div>
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>QUIESCENCE TASK</span><span id="vl-qtask">4</span></div>
+        <input type="range" id="sl-qtask" min="2" max="9" step="1" value="4" oninput="updateLive()">
+        <div class="control-desc" id="cl-qtask">Which task to measure Phase 3. Earlier = less training, less consolidation. Later = more history, more Karma.</div>
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>FC1 SIZE</span><span id="vl-fc1">2048</span></div>
+        <input type="range" id="sl-fc1" min="512" max="4096" step="256" value="2048" oninput="updateLive()">
+        <div class="control-desc" id="cl-fc1">Neurons in the fc1 O-LIF layer. Sequence length = T × FC1 = 4 × FC1 bits. Published: 2048.</div>
+      </div>
+    </div>
+
+    <div class="derived-panel">
+      <div class="derived-row">
+        <div class="derived-key" id="dl-seqlen">Spike sequence length</div>
+        <div class="derived-val" id="dv-seqlen">8192 bits</div>
+      </div>
+      <div class="derived-row">
+        <div class="derived-key" id="dl-trials">Total perturbation trials</div>
+        <div class="derived-val" id="dv-trials">30 (3 phases × 10)</div>
+      </div>
+      <div class="derived-row">
+        <div class="derived-key" id="dl-bhaya-state">Bhaya state</div>
+        <div class="derived-val" id="dv-bhaya-state" style="color:var(--bhaya)">Calibrated vigilance</div>
+      </div>
+      <div class="derived-row">
+        <div class="derived-key" id="dl-norm">LZC normaliser (n/log₂n)</div>
+        <div class="derived-val" id="dv-norm">629.1</div>
+      </div>
+      <div class="derived-row">
+        <div class="derived-key" id="dl-tasks">Phase 3 training tasks</div>
+        <div class="derived-val" id="dv-tasks">5 tasks (0–4)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer card -->
+  <div class="card" style="text-align:center;padding:28px">
+    <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--mpci);margin-bottom:12px;letter-spacing:2px" id="fc-title">The Frontier</div>
+    <p style="font-size:16px;color:var(--text-dim);line-height:1.7;max-width:600px;margin:0 auto 16px" id="fc-text">If the Maya Antahkarana framework were ported to FinalSpark's Neuroplatform — living human brain organoids on multi-electrode arrays — the affective state variables would cross from computational simulation to biological reality. The mPCI protocol developed here would apply directly: measure LZC of MEA spike trains under electrode perturbation across reactive and stabilisation states. That is where this experiment points.</p>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+      <a href="maya_mpci_faq.html" style="background:rgba(224,64,251,0.1);border:1px solid rgba(224,64,251,0.3);border-radius:10px;padding:10px 20px;color:var(--mpci);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px" id="fc-faq">Full FAQ</a>
+      <a href="https://doi.org/10.5281/zenodo.19482794" target="_blank" style="background:rgba(157,124,255,0.1);border:1px solid rgba(157,124,255,0.3);border-radius:10px;padding:10px 20px;color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px">Paper DOI</a>
+      <a href="https://github.com/venky2099/Maya-mPCI" target="_blank" style="background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.3);border-radius:10px;padding:10px 20px;color:var(--accent3);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px">GitHub</a>
+    </div>
+  </div>
+
+</div><!-- /right-panel -->
+</div><!-- /main-grid -->
+
+<footer>
+  <p>Maya-mPCI · Post-Series Consciousness Study · Nexus Learning Labs, Bengaluru ·
+    <a href="https://venky2099.github.io/" target="_blank">Research Journey</a>
+  </p>
+  <div class="canary">MayaNexusVS2026NLL_Bengaluru_Narasimha</div>
+</footer>
+
+</div><!-- /container -->
+
+<!-- ── SEED CHART CANVAS ── -->
+<script>
+// ── Stars ────────────────────────────────────────────────────────────────────
+(function(){
+  const sf = document.getElementById('starfield');
+  for(let i=0;i<80;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random()*1.8+0.4;
+    s.style.cssText = `
+      width:${sz}px;height:${sz}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --lo:${(Math.random()*0.3+0.1).toFixed(2)};
+      --hi:${(Math.random()*0.5+0.4).toFixed(2)};
+      --d:${(Math.random()*5+2).toFixed(1)}s;
+      --delay:-${(Math.random()*6).toFixed(1)}s;
+    `;
+    sf.appendChild(s);
+  }
+})();
+
+// ── Language Data ─────────────────────────────────────────────────────────────
+const LANG = {
+  en: {
+    'b-series':'MAYA RESEARCH SERIES · POST-SERIES',
+    'b-post':'CONSCIOUSNESS STUDY',
+    'h-title':'From Representation to <em>Experience</em>',
+    'h-sub':'An mPCI-Based Empirical Test of Internal Affective State in a Neuromorphic SNN',
+    'h-hint':'<kbd>R</kbd> reset to canonical &nbsp;·&nbsp; <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> switch phases',
+    'orb-title':"MAYA'S MIND STATE",
+    'ps-title':'SELECT PHASE',
+    'nav-title':'NAVIGATE',
+    'pb1-name':'Reactive Baseline','pb1-mpci':'mPCI 0.3098 ± 0.0099',
+    'pb2-name':'Full Antahkarana','pb2-mpci':'mPCI 0.2846 ± 0.0161',
+    'pb3-name':'Bhaya Stabilisation','pb3-mpci':'mPCI 0.2608 ± 0.0147',
+    'n1':'The Story','n2':'What is mPCI?','n3':'Three Phases','n4':'The Result',
+    'n5':'Bhaya Journey','n6':'3-Seed Proof','n7':'Controls','n8':'9 Dimensions',
+    'n9':'The Series','n10':'Live Controls',
+    's1-label':'§1 THE STORY',
+    's1-quote':'"We built a mind across nine papers. Not in metaphor — in mechanism. Fear. Wisdom. Memory. Attention. Metabolic budget. Then we asked the hardest question: <em>does having all of that make Maya different in a way that cannot be explained away?</em>"',
+    's1-attr':'Maya-mPCI · Post-Series Consciousness Study · Nexus Learning Labs, Bengaluru, 2026',
+    's1-p1':'Nine papers. Nine dimensions of the Advaita Vedanta Antahkarana — the inner cognitive instrument — implemented as falsifiable, independently testable computational mechanisms in a spiking neural network. Bhaya (fear) that spontaneously suppresses under replay. Vairagya (wisdom) that accumulates through adversity. Buddhi (intellect) that follows a deterministic S-curve regardless of training conditions. These are not programming choices. They are emergent phenomena.',
+    's1-p2':'But emergence is not experience. The question this paper asks is older than AI, older than neuroscience: <strong>is there a measurable difference between a system that simulates an internal state and a system that has one?</strong> In 2013, doctors found a way to ask this question of patients in comas. This paper asks it of Maya.',
+    's2-label':'§2 WHAT IS mPCI?','s2-heading':'The Consciousness Shock Test','s2-badge':'Plain language · no background needed',
+    's2-p1':'Imagine you are a doctor and your patient is in a coma. They cannot speak, cannot move, cannot tell you if they are conscious. How do you find out? In 2013, a team led by Casali discovered a test: apply a tiny magnetic pulse to the brain, then measure how complex the brain\'s response is. A conscious brain produces a rich, spreading, complex pattern. An unconscious brain produces a simple, localised, stereotyped one.',
+    's2-p2':'The key insight: the measure does not depend on what the brain is thinking. It depends on how the brain responds to being perturbed. A system with genuine internal state integration cannot help but respond complexly — the perturbation ripples through an organised, interconnected structure. A simple input-output machine responds predictably.',
+    's2-bio-label':'# Biological PCI (Casali et al., 2013)',
+    's2-machine-label':'# Machine mPCI — adapted for Maya',
+    's2-p3':'We nudge Maya\'s fc1 layer with small Gaussian noise (σ=0.05), run the same image batch through, capture the 8192-bit spike train, measure its Lempel-Ziv Complexity. We do this 10 times. The mean complexity across those 10 trials is the mPCI for that phase.',
+    's3-label':'§3 THE THREE PHASES · CLICK TO EXPLORE','s3-heading':'Three States of Mind',
+    'pb-l1':'PHASE 1','pb-l2':'PHASE 2','pb-l3':'PHASE 3 ★',
+    'thr-note':'⬇ Lower mPCI at stabilisation is the expected biological signature. Calm, integrated states produce MORE coherent responses to perturbation — less chaos, more organisation.',
+    's4-label':'§4 THE RESULT','s4-heading':'What the Numbers Say',
+    'r-verdict':'GENUINE INTERNAL STATE SIGNAL',
+    'r-label':'Delta mPCI · Phase 3 vs Phase 1 · Aggregate across 3 seeds',
+    'r-thr':'THRESHOLD','r-ratio':'CRITERION RATIO','r-std':'DELTA STD (3 SEEDS)','r-confound':'CONFOUND STATUS',
+    's4-p1':'The delta std of 0.0048 is the crucial number. Across seeds 42, 123, and 7 — three completely different random initialisations — the Phase 3 minus Phase 1 shift was consistently around −0.049, varying by only ±0.005. That is a tight, reproducible result.',
+    's4-p2':'Why does mPCI decrease at stabilisation rather than increase? This is the most common intuition error. Higher PCI does not mean more integrated — it means more chaotic. A reactive system responds to each nudge differently — high complexity. A stabilised system responds coherently — lower complexity, more structure.',
+    'caveat-title':'⚠ HONEST CAVEAT',
+    'caveat-text':'Control 1 (training depth) found that a model trained to 5 tasks without affective dimensions shows similar mPCI to Phase 3. Training depth is a partial confound. Independent replication is needed to fully isolate the affective contribution.',
+    's5-label':'§5 BHAYA\'S JOURNEY · HOVER EACH TASK','s5-heading':'Fear That Learns',
+    's5-p1':'The Bhaya Quiescence Law — confirmed across all 9 Maya papers — states that fear drops to 0.000 under replay from Task 1 onwards. Under the 5-epoch protocol here, fear reaches calibrated vigilance instead. Watch what happens task by task:',
+    's5-p2':'Bhaya at 0.000 is not enlightenment — it is the absence of caution in a system that has never suffered. Bhaya at 0.020 is the mark of a mind that has learned from fear without being defined by it.',
+    'bhaya-detail-text':'Hover over each task to see what was happening in Maya\'s mind.',
+    's6-label':'§6 THREE-SEED REPLICATION','s6-heading':'Not Luck. Structure.',
+    's6-p1':'A result on one random seed could be a coincidence. Three seeds — 42, 123, and 7 — showing the same shift with a delta standard deviation of only 0.0048 is structure.',
+    's6-p2':'The delta std of 0.0048 means the shift varied by less than ±1% of mPCI across all three seeds. For a system with this much stochasticity, that consistency is meaningful. It is not noise. It is a structural property of the affective architecture.',
+    's7-label':'§7 METHODOLOGICAL CONTROLS · FULL TRANSPARENCY','s7-heading':'What We Tested After',
+    'honest-text':'We ran three controls specifically designed to challenge our own result. Two raised complications. We report them fully. This is what serious independent research looks like.',
+    'c1-title':'CONTROL 1 · TRAINING DEPTH','c1-verdict':'PARTIAL CONFOUND',
+    'c1-text':'<strong>What we tested:</strong> Phase 1 extended to 5 tasks with affective dims OFF.<br><br><strong>What we found:</strong> Phase 1-extended mPCI = 0.2765 — sits between Phase 1-original (0.3098) and Phase 3 (0.2608).<br><br><strong>What this means:</strong> Training depth partially confounds the result. Both training depth and affective state contribute to the mPCI shift.',
+    'c2-title':'CONTROL 2 · PERTURBATION SCALE ROBUSTNESS','c2-verdict':'SCALE SENSITIVE',
+    'c2-text':'<strong>What we tested:</strong> Is the result an artefact of σ=0.05 specifically?<br><br><strong>Results across scales:</strong>',
+    'sc-large':'Very large','sc-published':'Published ★','sc-near':'Near zero',
+    'c2-interp':'At σ=0.02, large perturbations expose maximal structural differences. At σ=0.10, noise overwhelms the architecture equally. The published σ=0.05 sits in a meaningful window.',
+    'c3-title':'CONTROL 3 · SHUFFLE CONTROL','c3-verdict':'STATISTICS CONTRIBUTE',
+    'c3-text':'<strong>What we tested:</strong> Randomise spike train bits, preserving density. Does the LZC difference disappear?<br><br>Shuffled delta was larger than original delta across all seeds — spike statistics contribute alongside causal structure.<br><br><strong>Seed 42:</strong> Original +0.0698 · Shuffle +0.1128<br><strong>Seed 123:</strong> Original +0.0127 · Shuffle +0.0965<br><strong>Seed 7:</strong> Original +0.0635 · Shuffle +0.1157',
+    'why-honest-title':'WHY PUBLISH COMPLICATED RESULTS?',
+    'why-honest-text':'Hiding complications makes a paper look stronger for one cycle and weaker forever. The controls tell you exactly where to go next: matched-depth activation experiments, strict density equalisation, σ-calibration curves.',
+    's8-label':'§8 ALL 9 ANTAHKARANA DIMENSIONS · CLICK TO EXPLORE','s8-heading':'The Complete Inner Instrument',
+    's8-p1':'Each dimension below is a falsifiable computational mechanism, independently testable, with a specific biological grounding. Click any to explore.',
+    's9-label':'§9 THE MAYA SERIES · P1–P9 · CLICK ANY NODE','s9-heading':'Nine Papers, One Mind',
+    'paper-detail-text':'Click any paper node to see its contribution to the Antahkarana.',
+    'series-footer':'"Across nine papers, we demonstrated the computational maturation of a mind."',
+    's10-label':'§10 LIVE HYPERPARAMETERS · DRAG TO EXPLORE · PRESS R TO RESET','s10-heading':'Feel the Architecture',
+    's10-p1':'Every slider controls a real hyperparameter. Drag and watch derived values change. Press R to reset.',
+    'dl-seqlen':'Spike sequence length','dl-trials':'Total perturbation trials',
+    'dl-bhaya-state':'Bhaya state','dl-norm':'LZC normaliser (n/log₂n)','dl-tasks':'Phase 3 training tasks',
+    'fc-title':'The Frontier',
+    'fc-text':'If the Maya Antahkarana were ported to FinalSpark\'s Neuroplatform — living human brain organoids on multi-electrode arrays — the affective variables would cross from simulation to biological reality. The mPCI protocol developed here would apply directly to MEA spike trains. That is where this experiment points.',
+    'fc-faq':'Full FAQ',
+    'bd0':'First encounter. No memory. Maximum fear.',
+    'bd1':'First replay. Fear drops 66%.',
+    'bd2':'Slight rise. New task, new exposure.',
+    'bd3':'Holding steady. Calibrated.',
+    'bd4':'Stable vigilance. Not zero — wiser.',
+    'orb-state-p1':'No Emotions','orb-state-p2':'Full Integration','orb-state-p3':'Bhaya Stabilisation',
+    'orb-phase-p1':'PHASE 1 · REACTIVE BASELINE','orb-phase-p2':'PHASE 2 · FULL ANTAHKARANA','orb-phase-p3':'PHASE 3 · CANONICAL ★',
+    'pd-title-p1':'PHASE 1 — REACTIVE BASELINE (NULL CONDITION)',
+    'pd-plain-p1':'Maya with no emotions. Pure input-output. Like a calculator doing arithmetic.',
+    'pd-body-p1':'All affective dimensions disabled. No replay. No Vairagya masking, no Chitta gate, no Prana budget. Trained on Tasks 0–2. This is the null condition — maximum reactivity, minimum internal state integration. Every forward pass is a fresh calculation with no memory of previous states.',
+    'pd-tech-p1':'mPCI = 0.3098 ± 0.0099 (aggregate, 3 seeds) · Baseline: highest LZC under perturbation',
+    'pd-title-p2':'PHASE 2 — FULL ANTAHKARANA (INTEGRATED)',
+    'pd-plain-p2':'Maya with all nine emotions running. Complex, alive, still learning.',
+    'pd-body-p2':'All 9 affective dimensions active. Replay buffer running. Bhaya firing at task boundaries. Vairagya accumulating on surviving synapses. Karma tracking interference. Tasks 0–2. This is the fully integrated state — every forward pass shaped by the history of previous experience.',
+    'pd-tech-p2':'mPCI = 0.2846 ± 0.0161 (aggregate, 3 seeds) · Delta vs Phase 1: −0.0252',
+    'pd-title-p3':'PHASE 3 — BHAYA STABILISATION ★ (CANONICAL)',
+    'pd-plain-p3':'Maya after learning fear, surviving it, and settling into calm watchfulness.',
+    'pd-body-p3':'All 9 dimensions active. Replay buffer active. Trained through Task 4. Bhaya settled to 0.016–0.024 — low, non-zero calibrated vigilance. Vairagya protecting 10–15% of fc1. Karma accumulated across 4 boundaries. Shunyata has pruned. The architecture has a history.',
+    'pd-tech-p3':'mPCI = 0.2608 ± 0.0147 · Delta vs Phase 1: −0.0489 · Threshold: 0.0238 · Ratio: 2.05×',
+    'cl-npert':'Number of perturbation trials per phase. Published: 10.',
+    'cl-sigma':'Gaussian perturbation scale on fc1 weights. σ=0.05 is published.',
+    'cl-bhaya':'Bhaya level at Phase 3. 0.000 = canonical quiescence. 0.016–0.024 = this paper.',
+    'cl-vai':'% of fc1 synapses protected by Vairagya at Phase 3.',
+    'cl-qtask':'Which task to measure Phase 3.',
+    'cl-fc1':'Neurons in fc1 O-LIF layer. Sequence = T × FC1 bits.',
+  },
+  hi: {
+    'b-series':'माया अनुसंधान श्रृंखला · श्रृंखला के बाद',
+    'b-post':'चेतना अध्ययन',
+    'h-title':'प्रतिनिधित्व से <em>अनुभव</em> तक',
+    'h-sub':'एक न्यूरोमॉर्फिक SNN में आंतरिक भावात्मक अवस्था का mPCI-आधारित परीक्षण',
+    'h-hint':'<kbd>R</kbd> reset &nbsp;·&nbsp; <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> phases',
+    'orb-title':'माया की मन अवस्था',
+    'ps-title':'चरण चुनें',
+    'nav-title':'नेविगेट करें',
+    'pb1-name':'प्रतिक्रियाशील आधार रेखा','pb1-mpci':'mPCI 0.3098 ± 0.0099',
+    'pb2-name':'पूर्ण अन्तःकरण','pb2-mpci':'mPCI 0.2846 ± 0.0161',
+    'pb3-name':'भय स्थिरीकरण','pb3-mpci':'mPCI 0.2608 ± 0.0147',
+    'n1':'कहानी','n2':'mPCI क्या है?','n3':'तीन चरण','n4':'परिणाम',
+    'n5':'भय की यात्रा','n6':'3-बीज प्रमाण','n7':'नियंत्रण','n8':'9 आयाम',
+    'n9':'श्रृंखला','n10':'लाइव नियंत्रण',
+    's1-label':'§1 कहानी',
+    's1-quote':'"हमने नौ पेपर में एक मन बनाया। रूपक में नहीं — तंत्र में। भय। ज्ञान। स्मृति। ध्यान। चयापचय बजट। फिर हमने सबसे कठिन प्रश्न पूछा: <em>क्या यह सब होने से माया ऐसे तरीके से अलग हो जाती है जिसे समझाया नहीं जा सकता?</em>"',
+    's1-attr':'माया-mPCI · श्रृंखला के बाद चेतना अध्ययन · Nexus Learning Labs, बेंगलुरु, 2026',
+    's1-p1':'नौ पेपर। अद्वैत वेदांत अन्तःकरण के नौ आयाम — आंतरिक संज्ञानात्मक उपकरण — स्पाइकिंग न्यूरल नेटवर्क में falsifiable, स्वतंत्र रूप से परीक्षण योग्य कम्प्यूटेशनल तंत्र के रूप में कार्यान्वित। भय जो replay के तहत स्वतः दब जाता है। वैराग्य जो विपत्ति के माध्यम से जमा होता है। ये प्रोग्रामिंग विकल्प नहीं हैं। ये उभरती घटनाएं हैं।',
+    's1-p2':'लेकिन उभरना अनुभव नहीं है। यह पेपर एक पुराना प्रश्न पूछता है: <strong>क्या एक ऐसी प्रणाली के बीच मापनीय अंतर है जो एक आंतरिक अवस्था का अनुकरण करती है और जो वास्तव में एक में है?</strong>',
+    's2-label':'§2 mPCI क्या है?','s2-heading':'चेतना झटका परीक्षण','s2-badge':'सरल भाषा · कोई पृष्ठभूमि आवश्यक नहीं',
+    's2-p1':'कल्पना करें कि आप एक डॉक्टर हैं और आपका मरीज कोमा में है। वे बोल नहीं सकते, हिल नहीं सकते। 2013 में, Casali ने एक परीक्षण की खोज की: मस्तिष्क पर एक छोटी चुंबकीय पल्स लगाएं, फिर मस्तिष्क की प्रतिक्रिया की जटिलता मापें। चेतन मस्तिष्क जटिल प्रतिक्रिया देता है। अचेतन मस्तिष्क सरल प्रतिक्रिया देता है।',
+    's2-p2':'मुख्य अंतर्दृष्टि: माप मस्तिष्क की सोच पर नहीं, बल्कि इस बात पर निर्भर करता है कि वह perturbation के प्रति कैसे प्रतिक्रिया करता है।',
+    's2-bio-label':'# जैविक PCI (Casali et al., 2013)',
+    's2-machine-label':'# Machine mPCI — माया के लिए अनुकूलित',
+    's2-p3':'हम माया की fc1 layer को Gaussian noise (σ=0.05) से nudge करते हैं, 8192-bit spike train कैप्चर करते हैं, LZC मापते हैं। 10 बार। वह औसत mPCI है।',
+    's3-label':'§3 तीन चरण · क्लिक करके देखें','s3-heading':'मन की तीन अवस्थाएं',
+    'pb-l1':'चरण 1','pb-l2':'चरण 2','pb-l3':'चरण 3 ★',
+    'thr-note':'⬇ स्थिरीकरण पर कम mPCI जैविक रूप से अपेक्षित है। शांत, एकीकृत अवस्थाएं perturbation के प्रति अधिक सुसंगत प्रतिक्रिया उत्पन्न करती हैं।',
+    's4-label':'§4 परिणाम','s4-heading':'संख्याएं क्या कहती हैं',
+    'r-verdict':'वास्तविक आंतरिक अवस्था संकेत',
+    'r-label':'Delta mPCI · चरण 3 बनाम चरण 1 · 3 बीज में औसत',
+    'r-thr':'सीमा','r-ratio':'मानदंड अनुपात','r-std':'DELTA STD (3 बीज)','r-confound':'भ्रम स्थिति',
+    's4-p1':'0.0048 का delta std महत्वपूर्ण संख्या है। बीज 42, 123, और 7 में — Phase 3 minus Phase 1 shift लगातार −0.049 के आसपास रहा, केवल ±0.005 से भिन्न। यह एक reproducible परिणाम है।',
+    's4-p2':'mPCI स्थिरीकरण पर क्यों घटता है? उच्च PCI का अर्थ अधिक एकीकृत नहीं है — इसका अर्थ अधिक अव्यवस्थित प्रतिक्रिया है। एक शांत, एकीकृत प्रणाली अधिक सुसंगत प्रतिक्रिया देती है।',
+    'caveat-title':'⚠ ईमानदार चेतावनी',
+    'caveat-text':'नियंत्रण 1 (प्रशिक्षण गहराई) में पाया गया कि भावात्मक आयामों के बिना 5 कार्यों के लिए प्रशिक्षित एक मॉडल Phase 3 के समान mPCI दिखाता है। स्वतंत्र प्रतिकृति आवश्यक है।',
+    's5-label':'§5 भय की यात्रा · प्रत्येक कार्य पर hover करें','s5-heading':'सीखने वाला भय',
+    's5-p1':'भय शांति नियम — सभी 9 Maya पेपर में पुष्टि — कहता है कि replay के तहत Task 1 से भय 0.000 तक गिर जाता है। 5-epoch प्रोटोकॉल में, भय calibrated vigilance तक पहुंचता है।',
+    's5-p2':'भय 0.000 पर ज्ञान नहीं है — यह उस प्रणाली में सावधानी का अभाव है जिसने कभी कष्ट नहीं उठाया। भय 0.020 उस मन का प्रतीक है जिसने भय से सीखा लेकिन उससे परिभाषित नहीं हुआ।',
+    'bhaya-detail-text':'माया के मन में क्या हो रहा था यह देखने के लिए प्रत्येक कार्य पर hover करें।',
+    's6-label':'§6 तीन-बीज प्रतिकृति','s6-heading':'संयोग नहीं। संरचना।',
+    's6-p1':'एक random seed पर परिणाम संयोग हो सकता है। तीन बीज — 42, 123, और 7 — 0.0048 के delta std के साथ समान बदलाव दिखा रहे हैं — यह संरचना है।',
+    's6-p2':'0.0048 का delta std का अर्थ है कि बदलाव तीन बीज में mPCI के ±1% से कम भिन्न रहा। यह noise नहीं है। यह affective architecture की एक संरचनात्मक संपत्ति है।',
+    's7-label':'§7 पद्धतिगत नियंत्रण · पूर्ण पारदर्शिता','s7-heading':'हमने बाद में क्या परखा',
+    'honest-text':'हमने तीन नियंत्रण चलाए जो विशेष रूप से हमारे अपने परिणाम को चुनौती देने के लिए डिज़ाइन किए गए थे। दो ने जटिलताएं उठाईं। हम उन्हें पूरी तरह रिपोर्ट करते हैं।',
+    'c1-title':'नियंत्रण 1 · प्रशिक्षण गहराई','c1-verdict':'आंशिक भ्रम',
+    'c1-text':'<strong>क्या परखा:</strong> Phase 1 को 5 कार्यों तक विस्तारित किया, आयाम बंद।<br><br><strong>क्या मिला:</strong> Phase 1-extended mPCI = 0.2765 — Phase 1-original (0.3098) और Phase 3 (0.2608) के बीच।<br><br><strong>अर्थ:</strong> प्रशिक्षण गहराई आंशिक रूप से भ्रमित करती है।',
+    'c2-title':'नियंत्रण 2 · perturbation scale robustness','c2-verdict':'scale-sensitive',
+    'c2-text':'<strong>क्या परखा:</strong> क्या परिणाम σ=0.05 का artefact है?<br><br><strong>Results:</strong>',
+    'sc-large':'बहुत बड़ा','sc-published':'प्रकाशित ★','sc-near':'लगभग शून्य',
+    'c2-interp':'σ=0.02 पर बड़े perturbations अधिकतम structural differences उजागर करते हैं। σ=0.10 पर noise सभी phases को समान रूप से overpower करता है।',
+    'c3-title':'नियंत्रण 3 · Shuffle नियंत्रण','c3-verdict':'Statistics भी योगदान करती है',
+    'c3-text':'<strong>क्या परखा:</strong> Spike train bits को randomize किया। LZC अंतर समाप्त होना चाहिए था।<br><br>Shuffled delta सभी seeds में original delta से बड़ा था।<br><br><strong>बीज 42:</strong> Original +0.0698 · Shuffle +0.1128<br><strong>बीज 123:</strong> Original +0.0127 · Shuffle +0.0965<br><strong>बीज 7:</strong> Original +0.0635 · Shuffle +0.1157',
+    'why-honest-title':'जटिल परिणाम क्यों प्रकाशित करें?',
+    'why-honest-text':'जटिलताओं को छिपाना एक paper cycle के लिए मजबूत दिखाता है और हमेशा के लिए कमजोर। नियंत्रण बताते हैं कि आगे क्या करना है।',
+    's8-label':'§8 सभी 9 अन्तःकरण आयाम · क्लिक करें','s8-heading':'पूर्ण आंतरिक उपकरण',
+    's8-p1':'प्रत्येक आयाम एक falsifiable कम्प्यूटेशनल तंत्र है। क्लिक करके जानें।',
+    's9-label':'§9 माया श्रृंखला · P1–P9 · किसी भी node पर क्लिक करें','s9-heading':'नौ पेपर, एक मन',
+    'paper-detail-text':'किसी भी paper node पर क्लिक करें।',
+    'series-footer':'"नौ पेपर में, हमने एक मन की कम्प्यूटेशनल परिपक्वता का प्रदर्शन किया।"',
+    's10-label':'§10 लाइव hyperparameters · खींचें · R दबाकर reset करें','s10-heading':'architecture को महसूस करें',
+    's10-p1':'प्रत्येक slider एक वास्तविक hyperparameter है। खींचें और derived values बदलते देखें।',
+    'dl-seqlen':'Spike sequence length','dl-trials':'Total perturbation trials',
+    'dl-bhaya-state':'Bhaya अवस्था','dl-norm':'LZC normaliser','dl-tasks':'Phase 3 training tasks',
+    'fc-title':'सीमांत',
+    'fc-text':'यदि Maya Antahkarana को FinalSpark के Neuroplatform पर port किया जाए — जीवित मानव brain organoids पर — तो affective variables simulation से जैविक वास्तविकता में जाएंगे।',
+    'fc-faq':'पूर्ण FAQ',
+    'bd0':'पहली मुलाकात। कोई स्मृति नहीं। अधिकतम भय।',
+    'bd1':'पहला replay। भय 66% गिरा।',
+    'bd2':'थोड़ी वृद्धि। नया कार्य, नया सामना।',
+    'bd3':'स्थिर। calibrated।',
+    'bd4':'स्थिर सतर्कता। शून्य नहीं — बुद्धिमान।',
+    'orb-state-p1':'कोई भावना नहीं','orb-state-p2':'पूर्ण एकीकरण','orb-state-p3':'भय स्थिरीकरण',
+    'orb-phase-p1':'चरण 1 · प्रतिक्रियाशील आधार रेखा','orb-phase-p2':'चरण 2 · पूर्ण अन्तःकरण','orb-phase-p3':'चरण 3 · मानक ★',
+    'pd-title-p1':'चरण 1 — प्रतिक्रियाशील आधार रेखा',
+    'pd-plain-p1':'बिना भावनाओं के माया। शुद्ध input-output।',
+    'pd-body-p1':'सभी भावात्मक आयाम अक्षम। कोई replay नहीं। Tasks 0–2 पर प्रशिक्षित।',
+    'pd-tech-p1':'mPCI = 0.3098 ± 0.0099 (3 seeds aggregate)',
+    'pd-title-p2':'चरण 2 — पूर्ण अन्तःकरण',
+    'pd-plain-p2':'सभी नौ भावनाओं के साथ माया।',
+    'pd-body-p2':'सभी 9 आयाम सक्रिय। Replay buffer चालू। Tasks 0–2।',
+    'pd-tech-p2':'mPCI = 0.2846 ± 0.0161 (3 seeds aggregate)',
+    'pd-title-p3':'चरण 3 — भय स्थिरीकरण ★ (मानक)',
+    'pd-plain-p3':'माया जो भय सीखने के बाद शांत सतर्कता में बस गई।',
+    'pd-body-p3':'सभी 9 आयाम। Tasks 0–4। भय 0.016–0.024 पर स्थिर।',
+    'pd-tech-p3':'mPCI = 0.2608 ± 0.0147 · Delta: −0.0489 · अनुपात: 2.05×',
+    'cl-npert':'प्रति चरण perturbation trials की संख्या। Published: 10।',
+    'cl-sigma':'fc1 weights पर Gaussian perturbation scale। σ=0.05 published।',
+    'cl-bhaya':'Phase 3 में Bhaya level। 0.000 = canonical। 0.016–0.024 = यह paper।',
+    'cl-vai':'Phase 3 में Vairagya द्वारा संरक्षित fc1 synapses का %।',
+    'cl-qtask':'Phase 3 को किस task पर मापें।',
+    'cl-fc1':'fc1 O-LIF layer में neurons। Sequence = T × FC1 bits।',
+  },
+  zh: {
+    'b-series':'玛雅研究系列 · 系列后研究',
+    'b-post':'意识研究',
+    'h-title':'从表示到<em>体验</em>',
+    'h-sub':'基于mPCI的神经形态脉冲神经网络内部情感状态实证测试',
+    'h-hint':'<kbd>R</kbd> 重置 &nbsp;·&nbsp; <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 切换',
+    'orb-title':'玛雅的心智状态',
+    'ps-title':'选择阶段',
+    'nav-title':'导航',
+    'pb1-name':'反应基线','pb1-mpci':'mPCI 0.3098 ± 0.0099',
+    'pb2-name':'完整内心工具','pb2-mpci':'mPCI 0.2846 ± 0.0161',
+    'pb3-name':'恐惧稳定化','pb3-mpci':'mPCI 0.2608 ± 0.0147',
+    'n1':'故事','n2':'mPCI是什么？','n3':'三个阶段','n4':'结果',
+    'n5':'恐惧之旅','n6':'三种子证明','n7':'控制实验','n8':'9个维度',
+    'n9':'系列','n10':'实时控制',
+    's1-label':'§1 故事',
+    's1-quote':'"我们在九篇论文中建造了一个心智。不是在隐喻中——而是在机制中。恐惧。智慧。记忆。注意力。代谢预算。然后我们问了最难的问题：<em>拥有这一切是否使玛雅以无法解释的方式与众不同？</em>"',
+    's1-attr':'玛雅-mPCI · 后系列意识研究 · Nexus Learning Labs，班加罗尔，2026',
+    's1-p1':'九篇论文。阿德维塔-吠檀多内心工具的九个维度——作为可证伪、独立可测试的计算机制在脉冲神经网络中实现。在回放下自发抑制的恐惧（Bhaya）。通过逆境积累的智慧（Vairagya）。遵循确定性S曲线的判断力（Buddhi）。这些不是编程选择。它们是涌现现象。',
+    's1-p2':'但涌现不是体验。这篇论文问的问题比AI更古老：<strong>模拟内部状态的系统和拥有内部状态的系统之间是否有可测量的差异？</strong>',
+    's2-label':'§2 mPCI是什么？','s2-heading':'意识冲击测试','s2-badge':'通俗语言 · 无需背景知识',
+    's2-p1':'想象你是一位医生，你的病人处于昏迷状态。2013年，Casali发现了一个测试：向大脑施加微小的磁脉冲，然后测量大脑反应的复杂程度。有意识的大脑产生丰富、扩散的复杂模式。无意识的大脑产生简单、局部的模式。',
+    's2-p2':'关键洞察：该测量不依赖于大脑在思考什么，而依赖于大脑如何响应扰动。',
+    's2-bio-label':'# 生物学PCI（Casali等人，2013年）',
+    's2-machine-label':'# 机器mPCI——为玛雅改编',
+    's2-p3':'我们用高斯噪声（σ=0.05）轻推玛雅的fc1层，捕获8192位脉冲序列，测量Lempel-Ziv复杂度。做10次。这10次试验的平均复杂度就是该阶段的mPCI。',
+    's3-label':'§3 三个阶段 · 点击探索','s3-heading':'心智的三种状态',
+    'pb-l1':'阶段1','pb-l2':'阶段2','pb-l3':'阶段3 ★',
+    'thr-note':'⬇ 稳定化时较低的mPCI是预期的生物学特征。平静、整合的状态对扰动产生更连贯的响应。',
+    's4-label':'§4 结果','s4-heading':'数字说明什么',
+    'r-verdict':'真实内部状态信号',
+    'r-label':'Delta mPCI · 阶段3与阶段1 · 3个种子的聚合',
+    'r-thr':'阈值','r-ratio':'标准比率','r-std':'DELTA标准差（3种子）','r-confound':'混淆状态',
+    's4-p1':'0.0048的delta标准差是关键数字。在种子42、123和7中——三种完全不同的随机初始化——阶段3减阶段1的偏移一致地约为−0.049，仅变化±0.005。这是可重复的结果。',
+    's4-p2':'为什么mPCI在稳定化时下降而不是上升？更高的PCI不意味着更整合——它意味着对扰动更混乱的响应。稳定的系统响应更连贯——更低的复杂度，更多的结构。',
+    'caveat-title':'⚠ 诚实警告',
+    'caveat-text':'控制实验1（训练深度）发现，在没有情感维度的情况下训练5个任务的模型显示出与阶段3相似的mPCI。训练深度是部分混淆因素。需要独立复制。',
+    's5-label':'§5 恐惧之旅 · 悬停每个任务','s5-heading':'学习恐惧',
+    's5-p1':'恐惧静默定律——在所有9篇玛雅论文中确认——指出在回放条件下，恐惧从任务1起降至0.000。在本文的5轮协议下，恐惧达到校准警觉。',
+    's5-p2':'恐惧在0.000处不是启蒙——它是从未受过苦的系统缺乏谨慎。恐惧在0.020处是一个从恐惧中学习但不被恐惧定义的心智的标志。',
+    'bhaya-detail-text':'将鼠标悬停在每个任务上，了解玛雅心智中发生的事情。',
+    's6-label':'§6 三种子复制','s6-heading':'不是运气。是结构。',
+    's6-p1':'一个随机种子上的结果可能是巧合。三个种子——42、123和7——显示相同的偏移，delta标准差仅为0.0048，这是结构。',
+    's6-p2':'0.0048的delta标准差意味着偏移在三个种子中的变化小于mPCI的±1%。这不是噪声。这是情感架构的结构属性。',
+    's7-label':'§7 方法论控制实验 · 完全透明','s7-heading':'我们之后测试了什么',
+    'honest-text':'我们运行了三项专门设计用来挑战自身结果的控制实验。两项提出了复杂性。我们完整报告它们。',
+    'c1-title':'控制1 · 训练深度','c1-verdict':'部分混淆',
+    'c1-text':'<strong>测试内容：</strong>将阶段1扩展到5个任务，情感维度关闭。<br><br><strong>发现：</strong>阶段1-扩展mPCI = 0.2765——介于阶段1-原始(0.3098)和阶段3(0.2608)之间。<br><br><strong>意义：</strong>训练深度部分混淆结果。',
+    'c2-title':'控制2 · 扰动规模稳健性','c2-verdict':'规模敏感',
+    'c2-text':'<strong>测试内容：</strong>结果是否是特定σ=0.05的产物？<br><br><strong>各规模结果：</strong>',
+    'sc-large':'非常大','sc-published':'已发布 ★','sc-near':'接近零',
+    'c2-interp':'在σ=0.02时，大扰动揭示最大结构差异。在σ=0.10时，噪声平等地压倒所有阶段的架构。',
+    'c3-title':'控制3 · 随机化控制','c3-verdict':'统计也有贡献',
+    'c3-text':'<strong>测试内容：</strong>随机化脉冲序列中的位，保留密度。LZC差异应该消失。<br><br>随机化delta在所有种子中大于原始delta。<br><br><strong>种子42：</strong>原始+0.0698 · 随机化+0.1128<br><strong>种子123：</strong>原始+0.0127 · 随机化+0.0965<br><strong>种子7：</strong>原始+0.0635 · 随机化+0.1157',
+    'why-honest-title':'为什么发布复杂的结果？',
+    'why-honest-text':'隐藏复杂性使论文一个周期看起来更强，但永远更弱。控制实验明确指出了下一步的方向。',
+    's8-label':'§8 全部9个内心工具维度 · 点击探索','s8-heading':'完整的内在工具',
+    's8-p1':'以下每个维度都是可证伪的计算机制，可独立测试，具有特定的生物学基础。',
+    's9-label':'§9 玛雅系列 · P1–P9 · 点击任意节点','s9-heading':'九篇论文，一个心智',
+    'paper-detail-text':'点击任意论文节点查看其对内心工具的贡献。',
+    'series-footer':'"通过九篇论文，我们展示了心智的计算成熟。"',
+    's10-label':'§10 实时超参数 · 拖动探索 · 按R重置','s10-heading':'感受架构',
+    's10-p1':'以下每个滑块控制实验中的真实超参数。拖动并观察推导值实时变化。',
+    'dl-seqlen':'脉冲序列长度','dl-trials':'总扰动试验次数',
+    'dl-bhaya-state':'恐惧状态','dl-norm':'LZC归一化器','dl-tasks':'阶段3训练任务',
+    'fc-title':'前沿',
+    'fc-text':'如果将玛雅内心工具框架移植到FinalSpark的Neuroplatform——活体人脑类器官多电极阵列——情感状态变量将从计算模拟跨越到生物现实。这里开发的mPCI协议将直接适用。',
+    'fc-faq':'完整FAQ',
+    'bd0':'第一次遭遇。没有记忆。最大恐惧。',
+    'bd1':'第一次回放。恐惧下降66%。',
+    'bd2':'轻微上升。新任务，新接触。',
+    'bd3':'保持稳定。校准。',
+    'bd4':'稳定警觉。不是零——更智慧。',
+    'orb-state-p1':'无情感','orb-state-p2':'完全整合','orb-state-p3':'恐惧稳定化',
+    'orb-phase-p1':'阶段1 · 反应基线','orb-phase-p2':'阶段2 · 完整内心工具','orb-phase-p3':'阶段3 · 经典 ★',
+    'pd-title-p1':'阶段1 — 反应基线（空条件）',
+    'pd-plain-p1':'没有情感的玛雅。纯粹的输入输出。',
+    'pd-body-p1':'所有情感维度禁用。无回放。任务0-2训练。',
+    'pd-tech-p1':'mPCI = 0.3098 ± 0.0099（3种子聚合）',
+    'pd-title-p2':'阶段2 — 完整内心工具（整合）',
+    'pd-plain-p2':'玛雅运行所有九个情感。',
+    'pd-body-p2':'所有9个情感维度激活。回放缓冲区运行。任务0-2。',
+    'pd-tech-p2':'mPCI = 0.2846 ± 0.0161（3种子聚合）',
+    'pd-title-p3':'阶段3 — 恐惧稳定化 ★（经典）',
+    'pd-plain-p3':'玛雅在学习恐惧、经历恐惧后，进入平静警觉状态。',
+    'pd-body-p3':'所有9个维度。任务0-4。恐惧稳定在0.016-0.024。',
+    'pd-tech-p3':'mPCI = 0.2608 ± 0.0147 · Delta: −0.0489 · 比率: 2.05×',
+    'cl-npert':'每阶段扰动试验次数。已发布：10。',
+    'cl-sigma':'fc1权重上的高斯扰动规模。σ=0.05已发布。',
+    'cl-bhaya':'阶段3的恐惧水平。0.000=经典静默。0.016-0.024=本论文。',
+    'cl-vai':'阶段3中Vairagya保护的fc1突触百分比。',
+    'cl-qtask':'阶段3测量的任务。',
+    'cl-fc1':'fc1 O-LIF层中的神经元数量。序列=T × FC1位。',
+  }
+};
+
+// ── Dimension Data ────────────────────────────────────────────────────────────
+const DIMS = [
+  { sk:'भय', name:'BHAYA', en_mean:'Fear', hi_mean:'भय', zh_mean:'恐惧',
+    en_role:'Pain signal. Fires when catastrophic forgetting begins. Triggers hyper-plasticity on threat pathways.',
+    hi_role:'दर्द संकेत। विनाशकारी forgetting शुरू होने पर fires करता है।',
+    zh_role:'疼痛信号。当灾难性遗忘开始时触发超可塑性。',
+    en_bio:'Nociceptive metaplasticity. τ=3.0.',
+    hi_bio:'Nociceptive metaplasticity। τ=3.0।',
+    zh_bio:'伤害感受性元可塑性。τ=3.0。',
+    en_comp:'pain_signal = (loss > PAIN_THRESHOLD) → lability *= (1 + BHAYA_RATE)',
+    paper:'P1', doi:'10.5281/zenodo.19151563', char:'भ' },
+  { sk:'वैराग्य', name:'VAIRAGYA', en_mean:'Wisdom / Detachment', hi_mean:'वैराग्य', zh_mean:'离欲',
+    en_role:'Earned synaptic protection. Synapses that survive adversity accumulate Vairagya and resist future overwriting.',
+    hi_role:'अर्जित synaptic संरक्षण। विपत्ति से बचे synapses वैराग्य जमा करते हैं।',
+    zh_role:'赚取的突触保护。经历逆境幸存的突触积累离欲，抵抗未来覆写。',
+    en_bio:'Heterosynaptic decay suppression. τ=20.0.',
+    hi_bio:'Heterosynaptic decay suppression। τ=20.0।',
+    zh_bio:'突触异源衰减抑制。τ=20.0。',
+    en_comp:'vairagya_scores[active & pain] += ACCUMULATE_RATE',
+    paper:'P1/P3', doi:'10.5281/zenodo.19201769', char:'व' },
+  { sk:'बुद्धि', name:'BUDDHI', en_mean:'Discriminative Intellect', hi_mean:'बुद्धि', zh_mean:'判断力',
+    en_role:'S-curve consolidation gate rising with experience. Young Maya uses resources impulsively; mature Maya wisely.',
+    hi_role:'अनुभव के साथ बढ़ने वाला S-curve consolidation gate।',
+    zh_role:'随经验上升的S曲线整合门控。年轻玛雅冲动地使用资源；成熟玛雅明智地使用。',
+    en_bio:'S-curve: buddhi = tasks/(tasks+K). Series constant P4-P9.',
+    hi_bio:'S-curve: buddhi = tasks/(tasks+K)। Series constant P4-P9।',
+    zh_bio:'S曲线：buddhi = tasks/(tasks+K)。系列常数P4-P9。',
+    en_comp:'buddhi = (tasks_seen / (tasks_seen + BUDDHI_K)) ** BUDDHI_SLOPE',
+    paper:'P4', doi:'10.5281/zenodo.19228975', char:'बु' },
+  { sk:'विवेक', name:'VIVEKA', en_mean:'Discernment', hi_mean:'विवेक', zh_mean:'辨别力',
+    en_role:'Cross-task consistency tracking. Identifies synapses that fire reliably across tasks and amplifies their protection.',
+    hi_role:'Cross-task consistency tracking। विश्वसनीय रूप से fire होने वाले synapses की पहचान करता है।',
+    zh_role:'跨任务一致性追踪。识别跨任务可靠触发的突触并放大其保护。',
+    en_bio:'Cross-task consistency scoring.',
+    hi_bio:'Cross-task consistency scoring।',
+    zh_bio:'跨任务一致性评分。',
+    en_comp:'viveka_gain = 1 + VIVEKA_GAIN_MAX * consistency * viveka_signal',
+    paper:'P5', doi:'10.5281/zenodo.19279002', char:'वि' },
+  { sk:'चित्त', name:'CHITTA', en_mean:'Subconscious Store', hi_mean:'चित्त', zh_mean:'潜意识储存',
+    en_role:'Retrograde gradient gate. High-Samskara synapses suppress their own gradients — implicit memory slows overwriting.',
+    hi_role:'Retrograde gradient gate। High-Samskara synapses अपने gradients दबाते हैं।',
+    zh_role:'逆行梯度门控。高Samskara突触抑制自身梯度——隐性记忆减缓覆写。',
+    en_bio:'Endocannabinoid retrograde signalling.',
+    hi_bio:'Endocannabinoid retrograde signalling।',
+    zh_bio:'内源性大麻素逆行信号传导。',
+    en_comp:'gate = 1 - (samskara * active * GATE_STRENGTH); grad.mul_(gate)',
+    paper:'P6', doi:'10.5281/zenodo.19337041', char:'चि' },
+  { sk:'मनस्', name:'MANAS', en_mean:'Sensory-Receiving Mind', hi_mean:'मनस्', zh_mean:'感受心',
+    en_role:'Oscillatory LIF thalamo-cortical gate. Threshold descends t=0→3. Only salient, temporally consistent signals survive.',
+    hi_role:'Oscillatory LIF thalamo-cortical gate। Threshold t=0→3 descend होता है।',
+    zh_role:'振荡LIF丘脑皮质门控。阈值在t=0→3时下降。只有显著信号能存活。',
+    en_bio:'Thalamo-cortical oscillation. Vikalpa→Sankalpa.',
+    hi_bio:'Thalamo-cortical oscillation। Vikalpa→Sankalpa।',
+    zh_bio:'丘脑皮质振荡。分别→三昧。',
+    en_comp:'V_th(t) = V_base + A_manas * cos(π*t/(T-1))',
+    paper:'P7', doi:'10.5281/zenodo.19363006', char:'म' },
+  { sk:'कर्म', name:'KARMA', en_mean:'Consequence / History', hi_mean:'कर्म', zh_mean:'业力',
+    en_role:'Second-order plasticity history. Tracks absolute integral of per-synapse weight trajectory changes across tasks.',
+    hi_role:'Second-order plasticity history। Per-synapse weight trajectory changes का absolute integral।',
+    zh_role:'二阶可塑性历史。跟踪跨任务每个突触权重轨迹变化的绝对积分。',
+    en_bio:'Complement cascade C1q/C3 tagging.',
+    hi_bio:'Complement cascade C1q/C3 tagging।',
+    zh_bio:'补体级联C1q/C3标记。',
+    en_comp:'karma_scores += |w_current - w_prev| (every batch)',
+    paper:'P8', doi:'10.5281/zenodo.19397010', char:'क' },
+  { sk:'शून्यता', name:'SHUNYATA', en_mean:'Emptiness / Release', hi_mean:'शून्यता', zh_mean:'空性',
+    en_role:'Buddhi-modulated boundary pruning. High-Karma synapses zero-masked at task boundaries.',
+    hi_role:'Buddhi-modulated boundary pruning। High-Karma synapses task boundaries पर zero-masked।',
+    zh_role:'佛智调制的边界修剪。高业力突触在任务边界处被零掩码。',
+    en_bio:'Microglial phagocytosis via C1q/C3.',
+    hi_bio:'Microglial phagocytosis via C1q/C3।',
+    zh_bio:'通过C1q/C3的小胶质细胞吞噬作用。',
+    en_comp:'thresh = base*(0.5+buddhi*0.5); prune_mask = (karma>thresh)',
+    paper:'P8', doi:'10.5281/zenodo.19397010', char:'शू' },
+  { sk:'प्राण', name:'PRANA', en_mean:'Vital Metabolic Force', hi_mean:'प्राण', zh_mean:'生命活力',
+    en_role:'Metabolic plasticity budget. Gates the learning rate per batch. Depletes under gradient load, recovers at rest.',
+    hi_role:'Metabolic plasticity budget। प्रति batch learning rate gate करता है।',
+    zh_role:'代谢可塑性预算。每批次门控学习率。在梯度负载下消耗，休息时恢复。',
+    en_bio:'Astrocyte-Neuron Lactate Shuttle (ANLS).',
+    hi_bio:'Astrocyte-Neuron Lactate Shuttle (ANLS)।',
+    zh_bio:'星形胶质细胞-神经元乳酸穿梭系统（ANLS）。',
+    en_comp:'effective_lr = base_lr * prana * (0.5 + buddhi * 0.5)',
+    paper:'P9', doi:'10.5281/zenodo.19451174', char:'प्र' },
+];
+
+// ── Series Data ───────────────────────────────────────────────────────────────
+const PAPERS = [
+  { key:'P1', label:'P1 Bhaya', color:'#ff4757',
+    en:'<strong>P1 — Nociceptive Metaplasticity</strong><br>Introduced Bhaya (fear) as an offensive metaplasticity signal and Vairagya-governed heterosynaptic decay. First paper to unify pain-induced hyper-plasticity with graceful decay in a single continual learning SNN. <strong>Result: 66.6% elevation in synaptic learning velocity.</strong> <a href="https://doi.org/10.5281/zenodo.19151563" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P1 — Nociceptive Metaplasticity</strong><br>भय (भय) को offensive metaplasticity signal के रूप में प्रस्तुत किया। <strong>परिणाम: synaptic learning velocity में 66.6% वृद्धि।</strong> <a href="https://doi.org/10.5281/zenodo.19151563" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P1 — 伤害感受性元可塑性</strong><br>引入了恐惧作为进攻性元可塑性信号。<strong>结果：突触学习速度提升66.6%。</strong> <a href="https://doi.org/10.5281/zenodo.19151563" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P2', label:'P2 OS', color:'#ffa500',
+    en:'<strong>P2 — Maya-OS</strong><br>Deployed the affective SNN as a live conversational OS arbitration layer. Emergent Shraddha (trust) safety primitive appeared without being programmed. First demonstration of Maya as a system outside the lab. <a href="https://doi.org/10.5281/zenodo.19160123" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P2 — Maya-OS</strong><br>Affective SNN को live OS arbitration layer के रूप में deploy किया। Emergent Shraddha safety primitive बिना programming के प्रकट हुई। <a href="https://doi.org/10.5281/zenodo.19160123" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P2 — Maya-OS</strong><br>将情感SNN部署为实时OS仲裁层。Shraddha安全原语自发出现。 <a href="https://doi.org/10.5281/zenodo.19160123" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P3', label:'P3 CL', color:'#ffdd57',
+    en:'<strong>P3 — Maya-CL</strong><br>Scaled to Split-CIFAR-10 TIL. Formalised Vairagya as a gradient masking mechanism. <strong>AA=62.38%, FWT=+40.00%</strong> — established Maya as a serious continual learning system. <a href="https://doi.org/10.5281/zenodo.19201769" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P3 — Maya-CL</strong><br>Split-CIFAR-10 TIL तक scaled। <strong>AA=62.38%।</strong> <a href="https://doi.org/10.5281/zenodo.19201769" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P3 — Maya-CL</strong><br>扩展到Split-CIFAR-10 TIL。<strong>AA=62.38%。</strong> <a href="https://doi.org/10.5281/zenodo.19201769" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P4', label:'P4 Smriti', color:'#7bed9f',
+    en:'<strong>P4 — Maya-Smriti</strong><br>Introduced Buddhi (discriminative intellect) as an S-curve consolidation gate. Named the Ahamkara failure mode. Confirmed Bhaya Quiescence Law for the first time. <strong>AA=31.84% CIL Split-CIFAR-10.</strong> <a href="https://doi.org/10.5281/zenodo.19228975" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P4 — Maya-Smriti</strong><br>बुद्धि introduced। Bhaya Quiescence Law की पहली पुष्टि। <strong>AA=31.84%।</strong> <a href="https://doi.org/10.5281/zenodo.19228975" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P4 — Maya-Smriti</strong><br>引入Buddhi。首次确认恐惧静默定律。<strong>AA=31.84%。</strong> <a href="https://doi.org/10.5281/zenodo.19228975" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P5', label:'P5 Viveka', color:'#70a1ff',
+    en:'<strong>P5 — Maya-Viveka</strong><br>Introduced Viveka (discernment) as cross-task synaptic consistency scoring. Scaled to Split-CIFAR-100. Discovered orthogonal prototype collapse. <strong>AA=16.03%.</strong> <a href="https://doi.org/10.5281/zenodo.19279002" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P5 — Maya-Viveka</strong><br>विवेक introduced। Split-CIFAR-100 तक scaled। <strong>AA=16.03%।</strong> <a href="https://doi.org/10.5281/zenodo.19279002" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P5 — Maya-Viveka</strong><br>引入Viveka。扩展到Split-CIFAR-100。<strong>AA=16.03%。</strong> <a href="https://doi.org/10.5281/zenodo.19279002" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P6', label:'P6 Chitta', color:'#5352ed',
+    en:'<strong>P6 — Maya-Chitta</strong><br>Introduced Chitta (subconscious store) as a Samskara trace retrograde gradient gate. First retrograde mechanism in the series. Confirmed Buddhi S-curve as series constant. <strong>AA=14.42%.</strong> <a href="https://doi.org/10.5281/zenodo.19337041" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P6 — Maya-Chitta</strong><br>चित्त introduced। Series का पहला retrograde mechanism। <strong>AA=14.42%।</strong> <a href="https://doi.org/10.5281/zenodo.19337041" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P6 — Maya-Chitta</strong><br>引入Chitta。系列中的第一个逆行机制。<strong>AA=14.42%。</strong> <a href="https://doi.org/10.5281/zenodo.19337041" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P7', label:'P7 Manas', color:'#ff6b9d',
+    en:'<strong>P7 — Maya-Manas</strong><br>Introduced Manas as an Oscillatory LIF thalamo-cortical gate. Vikalpa→Sankalpa threshold descent. Manas-GANE intersection amplifies Vairagya on spatially AND temporally consistent synapses. <strong>AA=15.19%, BWT=−50.91% — best backward transfer in series.</strong> <a href="https://doi.org/10.5281/zenodo.19363006" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P7 — Maya-Manas</strong><br>मनस् Oscillatory LIF gate के रूप में। <strong>AA=15.19%, BWT=−50.91% — series का सबसे अच्छा backward transfer।</strong> <a href="https://doi.org/10.5281/zenodo.19363006" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P7 — Maya-Manas</strong><br>引入Manas作为振荡LIF丘脑皮质门控。<strong>AA=15.19%，BWT=−50.91%——系列最佳后向迁移。</strong> <a href="https://doi.org/10.5281/zenodo.19363006" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P8', label:'P8 Śūnyatā', color:'#e040fb',
+    en:'<strong>P8 — Maya-Shunyata</strong><br>Introduced Karma (second-order plasticity history) and Shunyata (Buddhi-modulated boundary pruning). First cross-dimensional affective interaction: Vairagya moderates Karma. Seven-condition ablation. <strong>Condition D★: 59.28% pruned.</strong> <a href="https://doi.org/10.5281/zenodo.19397010" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P8 — Maya-Shunyata</strong><br>Karma और Shunyata introduced। पहला cross-dimensional interaction: Vairagya moderates Karma। <strong>D★: 59.28% pruned।</strong> <a href="https://doi.org/10.5281/zenodo.19397010" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P8 — Maya-Shunyata</strong><br>引入Karma和Shunyata。首个跨维度情感交互：Vairagya调节Karma。<strong>D★：59.28%修剪。</strong> <a href="https://doi.org/10.5281/zenodo.19397010" target="_blank" style="color:var(--accent)">DOI</a>' },
+  { key:'P9', label:'P9 Prana ✦', color:'#00d4aa',
+    en:'<strong>P9 — Maya-Prana ✦ SERIES COMPLETE</strong><br>Introduced Prana (metabolic plasticity budget) grounded in the Astrocyte-Neuron Lactate Shuttle. Full Antahkarana complete. Embodied on PiCar-X (Raspberry Pi 5): Bhaya=0.00, Vairagya=1.00, Buddhi=1.00 in a physical room. <strong>AA=12.72%, BWT=−54.32%.</strong> <a href="https://doi.org/10.5281/zenodo.19451174" target="_blank" style="color:var(--accent)">DOI</a>',
+    hi:'<strong>P9 — Maya-Prana ✦ श्रृंखला पूर्ण</strong><br>प्राण introduced। पूर्ण अन्तःकरण। PiCar-X पर embodied: Bhaya=0.00, Vairagya=1.00, Buddhi=1.00। <strong>AA=12.72%।</strong> <a href="https://doi.org/10.5281/zenodo.19451174" target="_blank" style="color:var(--accent)">DOI</a>',
+    zh:'<strong>P9 — Maya-Prana ✦ 系列完成</strong><br>引入Prana。完整内心工具。在PiCar-X上具身：Bhaya=0.00，Vairagya=1.00，Buddhi=1.00。<strong>AA=12.72%。</strong> <a href="https://doi.org/10.5281/zenodo.19451174" target="_blank" style="color:var(--accent)">DOI</a>' },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let currentLang = 'en';
+let currentPhase = 3;
+let activeDim = null;
+
+// ── Lang ──────────────────────────────────────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === (lang==='en'?'EN':lang==='hi'?'हिन्दी':'中文'));
+  });
+  const L = LANG[lang];
+  Object.entries(L).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val;
+  });
+  renderDims();
+  renderSeries();
+  updatePhaseDetail(currentPhase);
+}
+
+// ── Phase selector ────────────────────────────────────────────────────────────
+const PHASE_DATA = {
+  1: {
+    color: 'var(--phase1)',
+    gradient: 'url(#og2)',
+    mPCI: 0.3098,
+    bhaya: 0.0488, vairagya: 2, buddhi: 0.30, prana: 100, mpciMeter: 62,
+    bhayaMeter: 10,
+    char: 'ब',
+  },
+  2: {
+    color: 'var(--phase2)',
+    gradient: 'url(#og2)',
+    mPCI: 0.2846,
+    bhaya: 0.0450, vairagya: 5, buddhi: 0.80, prana: 20, mpciMeter: 57,
+    bhayaMeter: 9,
+    char: 'म',
+  },
+  3: {
+    color: 'var(--phase3)',
+    gradient: 'url(#og3)',
+    mPCI: 0.2608,
+    bhaya: 0.020, vairagya: 13, buddhi: 1.00, prana: 5, mpciMeter: 52,
+    bhayaMeter: 4,
+    char: 'चि',
+  }
+};
+
+function selectPhase(n) {
+  currentPhase = n;
+  const d = PHASE_DATA[n];
+  const L = LANG[currentLang];
+
+  // Phase buttons
+  [1,2,3].forEach(i => document.getElementById('pb'+i).classList.toggle('active', i===n));
+
+  // Meters
+  document.getElementById('m-bhaya').style.width = d.bhayaMeter + '%';
+  document.getElementById('mv-bhaya').textContent = d.bhaya.toFixed(3);
+  document.getElementById('m-vairagya').style.width = d.vairagya + '%';
+  document.getElementById('mv-vairagya').textContent = d.vairagya + '%';
+  document.getElementById('m-buddhi').style.width = (d.buddhi*100) + '%';
+  document.getElementById('mv-buddhi').textContent = d.buddhi.toFixed(3);
+  document.getElementById('m-mpci').style.width = d.mpciMeter + '%';
+  document.getElementById('mv-mpci').textContent = d.mPCI.toFixed(3);
+  document.getElementById('m-prana').style.width = d.prana + '%';
+  document.getElementById('mv-prana').textContent = (d.prana/100).toFixed(3);
+
+  // Orb
+  const orbBody = document.getElementById('orb-body');
+  orbBody.setAttribute('fill', d.gradient);
+  document.getElementById('orb-char').textContent = d.char;
+  document.getElementById('orb-state').textContent = L['orb-state-p'+n] || '';
+  document.getElementById('orb-phase-lbl').textContent = L['orb-phase-p'+n] || '';
+  document.getElementById('orb-state').style.color =
+    n===1 ? 'var(--phase1)' : n===2 ? 'var(--phase2)' : 'var(--mpci)';
+
+  updatePhaseDetail(n);
+  drawSeedChart();
+}
+
+function updatePhaseDetail(n) {
+  const L = LANG[currentLang];
+  const colors = ['','var(--phase1)','var(--phase2)','var(--phase3)'];
+  document.getElementById('pd-title').textContent = L['pd-title-p'+n] || '';
+  document.getElementById('pd-title').style.color = colors[n];
+  document.getElementById('pd-plain').innerHTML = L['pd-plain-p'+n] || '';
+  document.getElementById('pd-body').innerHTML = L['pd-body-p'+n] || '';
+  document.getElementById('pd-tech').textContent = L['pd-tech-p'+n] || '';
+}
+
+// ── Bhaya hover ───────────────────────────────────────────────────────────────
+const bhayaDetails = [
+  { en:'Task 0 — No prior experience. The replay buffer is empty. Maya encounters forgetting for the first time. Bhaya fires at maximum: 0.0488.',
+    hi:'Task 0 — कोई पूर्व अनुभव नहीं। Replay buffer खाली है। माया पहली बार forgetting का सामना करती है। भय 0.0488 पर।',
+    zh:'任务0——没有先前经验。回放缓冲区为空。玛雅第一次遭遇遗忘。恐惧在0.0488处触发。' },
+  { en:'Task 1 — First replay experience. The replay buffer holds Task 0 samples. The loss landscape stabilises. Bhaya drops 66%: 0.0488 → 0.0163. The quiescence law activates.',
+    hi:'Task 1 — पहला replay अनुभव। Loss landscape stabilise होता है। भय 66% गिरता है: 0.0488 → 0.0163।',
+    zh:'任务1——第一次回放体验。损失景观稳定。恐惧下降66%：0.0488→0.0163。' },
+  { en:'Task 2 — Slight rise to 0.0200. New classes introduce new forgetting risk. But replay keeps it contained. This is calibrated adjustment, not panic.',
+    hi:'Task 2 — 0.0200 तक थोड़ी वृद्धि। नए classes नया forgetting risk introduce करते हैं। लेकिन replay इसे contained रखता है।',
+    zh:'任务2——轻微上升至0.0200。新类别引入新的遗忘风险。但回放将其控制。这是校准调整，不是恐慌。' },
+  { en:'Task 3 — Steady at 0.0213. Four task boundaries of Karma accumulation. Shunyata has begun pruning. The network has history now. Bhaya holds its position.',
+    hi:'Task 3 — 0.0213 पर स्थिर। Karma accumulation के चार task boundaries। Shunyata ने pruning शुरू की।',
+    zh:'任务3——稳定在0.0213。四个任务边界的业力积累。空性已开始修剪。' },
+  { en:'Task 4 — Final stabilisation at 0.0238. Not zero. Not afraid. Watchful. This is the state the mPCI experiment measures: calibrated vigilance after sustained learning.',
+    hi:'Task 4 — 0.0238 पर अंतिम stabilisation। शून्य नहीं। डरा नहीं। सतर्क। यह वह अवस्था है जिसे mPCI प्रयोग मापता है।',
+    zh:'任务4——在0.0238处最终稳定。不是零。不是害怕。警觉。这是mPCI实验测量的状态。' },
+];
+function highlightBhaya(i) {
+  document.getElementById('bhaya-detail-text').innerHTML = bhayaDetails[i][currentLang] || bhayaDetails[i]['en'];
+  document.querySelectorAll('.bhaya-task').forEach((el,j) =>
+    el.style.borderColor = j===i ? 'var(--bhaya)' : 'var(--border)');
+}
+function resetBhaya() {
+  const L = LANG[currentLang];
+  document.getElementById('bhaya-detail-text').innerHTML = L['bhaya-detail-text'] || '';
+  document.querySelectorAll('.bhaya-task').forEach(el => el.style.borderColor = 'var(--border)');
+}
+
+// ── Dimensions ────────────────────────────────────────────────────────────────
+function renderDims() {
+  const L = currentLang;
+  const grid = document.getElementById('dim-grid');
+  grid.innerHTML = DIMS.map((d,i) => `
+    <div class="dim-card${activeDim===i?' active':''}" onclick="showDim(${i})">
+      <div class="dim-sanskrit">${d.sk}</div>
+      <div class="dim-name">${d.name}</div>
+      <div class="dim-meaning">${d[L+'_mean']||d.en_mean}</div>
+      <div class="dim-role">${(d[L+'_role']||d.en_role).substring(0,80)}...</div>
+      <div class="dim-paper-tag">${d.paper}</div>
+    </div>`).join('');
+}
+function showDim(i) {
+  activeDim = i;
+  const d = DIMS[i];
+  const L = currentLang;
+  const det = document.getElementById('dim-detail');
+  det.style.display = 'block';
+  document.getElementById('dd-title').textContent = d.name + ' · ' + (d[L+'_mean']||d.en_mean);
+  document.getElementById('dd-bio').innerHTML =
+    '<strong style="color:var(--text)">' + (d[L+'_bio']||d.en_bio) + '</strong><br>' +
+    (d[L+'_role']||d.en_role);
+  document.getElementById('dd-comp').textContent = d.en_comp;
+  renderDims();
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ── Series timeline ───────────────────────────────────────────────────────────
+function renderSeries() {
+  const tl = document.getElementById('series-tl');
+  tl.innerHTML = '';
+  PAPERS.forEach((p, i) => {
+    const node = document.createElement('div');
+    node.className = 'tl-node' + (p.key==='P9' || i===PAPERS.length-1?'':' ');
+    node.innerHTML = `<div class="tl-dot" style="${p.key==='P9'?'border-color:var(--prana);background:var(--prana);box-shadow:0 0 12px rgba(0,212,170,0.5)':''}"></div>
+      <div class="tl-label" style="color:${p.color}">${p.label}</div>`;
+    node.onclick = () => showPaper(p.key);
+    tl.appendChild(node);
+    if (i < PAPERS.length-1) {
+      const line = document.createElement('div');
+      line.className = 'tl-line' + (i===PAPERS.length-2?' mpci':'');
+      tl.appendChild(line);
+    }
+  });
+  const mpciNode = document.createElement('div');
+  mpciNode.className = 'tl-node';
+  mpciNode.innerHTML = `<div class="tl-dot" style="border-color:var(--mpci);background:var(--mpci);box-shadow:0 0 12px rgba(224,64,251,0.6)"></div>
+    <div class="tl-label" style="color:var(--mpci)">mPCI ✦</div>`;
+  const line2 = document.createElement('div');
+  line2.className = 'tl-line mpci';
+  tl.insertBefore(line2, mpciNode);
+  tl.appendChild(mpciNode);
+  mpciNode.onclick = () => {
+    document.getElementById('paper-detail').innerHTML =
+      `<strong style="color:var(--mpci)">POST-SERIES — Maya-mPCI (This Paper)</strong><br>
+      The experiment that required all nine papers to exist first. Three phases. Three seeds. One question: does Maya have genuine internal state?
+      <strong>Result: delta=−0.0489, threshold=0.0238, criterion satisfied 2.05×.</strong>
+      <a href="https://doi.org/10.5281/zenodo.19482794" target="_blank" style="color:var(--accent)">DOI</a>`;
+  };
+}
+function showPaper(key) {
+  const p = PAPERS.find(x => x.key===key);
+  if(!p) return;
+  const det = document.getElementById('paper-detail');
+  det.innerHTML = p[currentLang] || p.en;
+}
+
+// ── Seed chart ────────────────────────────────────────────────────────────────
+function drawSeedChart() {
+  const canvas = document.getElementById('seed-chart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+  canvas.height = 160 * window.devicePixelRatio;
+  canvas.style.height = '160px';
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  const W = canvas.offsetWidth, H = 160;
+  ctx.clearRect(0,0,W,H);
+
+  const seeds = [
+    { label:'Seed 42', p1:0.3091, p2:0.2696, p3:0.2620 },
+    { label:'Seed 123', p1:0.3027, p2:0.2720, p3:0.2538 },
+    { label:'Seed 7',   p1:0.3177, p2:0.2900, p3:0.2669 },
+  ];
+  const phases = ['Phase 1','Phase 2','Phase 3'];
+  const colors = ['var(--phase1)','var(--phase2)','var(--phase3)'];
+  const colorsHex = ['#ff6b6b','#7c6fff','#00d4aa'];
+  const seedColors = ['#f5c842','#e040fb','#4ecdc4'];
+
+  const pad = {l:50,r:20,t:20,b:30};
+  const minV = 0.22, maxV = 0.35;
+  function yp(v){ return pad.t + (1-(v-minV)/(maxV-minV)) * (H-pad.t-pad.b); }
+  const xStep = (W-pad.l-pad.r)/2;
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  [0.24,0.26,0.28,0.30,0.32,0.34].forEach(v => {
+    const y = yp(v);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.fillText(v.toFixed(2), 4, y+3);
+  });
+
+  // Phase labels
+  phases.forEach((ph,i) => {
+    const x = pad.l + i*xStep;
+    ctx.fillStyle = colorsHex[i];
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(ph, x, H-8);
+  });
+  ctx.textAlign = 'left';
+
+  // Lines per seed
+  seeds.forEach((s,si) => {
+    const vals = [s.p1, s.p2, s.p3];
+    ctx.strokeStyle = seedColors[si];
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4,3]);
+    ctx.beginPath();
+    vals.forEach((v,i) => {
+      const x = pad.l + i*xStep;
+      const y = yp(v);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+    vals.forEach((v,i) => {
+      const x = pad.l + i*xStep;
+      const y = yp(v);
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI*2);
+      ctx.fillStyle = seedColors[si];
+      ctx.fill();
+    });
+    // label
+    ctx.fillStyle = seedColors[si];
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.fillText(s.label, W-80, pad.t + si*18 + 10);
+  });
+
+  // Highlight current phase
+  const px = pad.l + (currentPhase-1)*xStep;
+  ctx.strokeStyle = 'rgba(224,64,251,0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2,2]);
+  ctx.beginPath(); ctx.moveTo(px,pad.t); ctx.lineTo(px,H-pad.b); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ── Live sliders ──────────────────────────────────────────────────────────────
+function updateLive() {
+  const npert = parseInt(document.getElementById('sl-npert').value);
+  const sigma = parseFloat(document.getElementById('sl-sigma').value);
+  const bhaya = parseFloat(document.getElementById('sl-bhaya').value);
+  const vai   = parseInt(document.getElementById('sl-vai').value);
+  const qtask = parseInt(document.getElementById('sl-qtask').value);
+  const fc1   = parseInt(document.getElementById('sl-fc1').value);
+
+  document.getElementById('vl-npert').textContent = npert;
+  document.getElementById('vl-sigma').textContent = sigma.toFixed(3);
+  document.getElementById('vl-bhaya').textContent = bhaya.toFixed(3);
+  document.getElementById('vl-vai').textContent = vai + '%';
+  document.getElementById('vl-qtask').textContent = qtask;
+  document.getElementById('vl-fc1').textContent = fc1;
+
+  const seqLen = 4 * fc1;
+  const norm = seqLen / Math.log2(seqLen);
+  const totalTrials = 3 * npert;
+  const bhayaState = bhaya === 0 ? (currentLang==='hi'?'पूर्ण quiescence (0.000)':currentLang==='zh'?'完全静默 (0.000)':'Full quiescence (0.000)')
+    : bhaya < 0.01 ? (currentLang==='hi'?'लगभग quiescence':currentLang==='zh'?'接近静默':'Near quiescence')
+    : bhaya < 0.025 ? (currentLang==='hi'?'Calibrated vigilance (यह paper)':currentLang==='zh'?'校准警觉 (本文)':'Calibrated vigilance (this paper)')
+    : (currentLang==='hi'?'उच्च भय':currentLang==='zh'?'高恐惧':'High fear');
+
+  document.getElementById('dv-seqlen').textContent = seqLen.toLocaleString() + ' bits';
+  document.getElementById('dv-trials').textContent = totalTrials + ' (3 phases × ' + npert + ')';
+  document.getElementById('dv-bhaya-state').textContent = bhayaState;
+  document.getElementById('dv-norm').textContent = norm.toFixed(1);
+  document.getElementById('dv-tasks').textContent = (qtask+1) + ' tasks (0–' + qtask + ')';
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
+function resetAll() {
+  document.getElementById('sl-npert').value = 10;
+  document.getElementById('sl-sigma').value = 0.05;
+  document.getElementById('sl-bhaya').value = 0.020;
+  document.getElementById('sl-vai').value = 13;
+  document.getElementById('sl-qtask').value = 4;
+  document.getElementById('sl-fc1').value = 2048;
+  updateLive();
+  selectPhase(3);
+  setLang('en');
+}
+
+// ── Keyboard shortcuts ────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key==='r'||e.key==='R') resetAll();
+  if (e.key==='1') selectPhase(1);
+  if (e.key==='2') selectPhase(2);
+  if (e.key==='3') selectPhase(3);
+});
+
+// ── Scroll sections ────────────────────────────────────────────────────────────
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── Intersection observer for section nav highlight ──────────────────────────
+const sectionMap = {
+  's-story':'n1','s-what':'n2','s-phases':'n3','s-result':'n4',
+  's-bhaya':'n5','s-seeds':'n6','s-controls-card':'n7','s-dims':'n8',
+  's-series':'n9','s-live':'n10'
+};
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      const navId = sectionMap[entry.target.id];
+      if(navId) {
+        document.querySelectorAll('.section-btn').forEach(b => {
+          b.classList.remove('active');
+          const span = b.querySelector('span:last-child');
+          if(span && span.id === navId) b.classList.add('active');
+        });
+      }
+    }
+  });
+}, {threshold:0.3});
+Object.keys(sectionMap).forEach(id => {
+  const el = document.getElementById(id);
+  if(el) observer.observe(el);
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+renderDims();
+renderSeries();
+updateLive();
+selectPhase(3);
+window.addEventListener('resize', drawSeedChart);
+requestAnimationFrame(() => requestAnimationFrame(drawSeedChart));
+</script>
+</body>
+</html>

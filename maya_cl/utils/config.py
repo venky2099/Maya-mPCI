@@ -86,3 +86,13 @@ PRANA_DISABLED_VALUE = 1.0        # ablation C -- fixed Prana (constant 1.0, no 
 
 DATA_DIR = "data/"
 RESULTS_DIR = "results/"
+# mPCI -- Machine Perturbational Complexity Index experiment constants
+# Paper: "From Representation to Experience"
+# Biological ground: Perturbational Complexity Index (Casali et al., 2013)
+# adapted for SNN spike trains via Lempel-Ziv Complexity.
+MPCI_PERTURBATION_SCALE = 0.05    # Gaussian noise std on fc1 weights per trial
+MPCI_N_PERTURBATIONS    = 10      # number of independent perturbation trials
+MPCI_SEED_BASE          = 42      # base seed -- trial i uses MPCI_SEED_BASE + i
+MPCI_BATCH_SIZE         = 32      # batch size for mPCI forward passes
+MPCI_QUIESCENCE_TASK    = 4       # task index after which Bhaya=0.000 confirmed
+MPCI_THRESHOLD_SIGMA    = 2.0     # pooled SD multiplier for genuine state detection

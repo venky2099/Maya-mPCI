@@ -1,8 +1,10 @@
-﻿# Data
+# Data
 data/
 
 # Results (CSV logs)
 results/
+!results/*.json
+!results/*.csv
 
 # Python cache
 __pycache__/
