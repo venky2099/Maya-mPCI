@@ -1,4 +1,7 @@
-﻿# run_ablation_prana.py -- Maya-Prana Paper 9 ablation study
+﻿import verify_provenance  # Maya Research Series -- Nexus Learning Labs, Bengaluru
+verify_provenance.stamp()  # logs canary + ORCID on every run
+
+# run_ablation_prana.py -- Maya-Prana Paper 9 ablation study
 # Split-CIFAR-100 CIL, 6 conditions
 #
 # A: P8 baseline (no Prana)              -- reference ~15.19% AA

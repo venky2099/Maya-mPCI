@@ -1,4 +1,7 @@
-﻿# run_prana_cil.py -- Maya-Prana Paper 9 main experiment
+﻿import verify_provenance  # Maya Research Series -- Nexus Learning Labs, Bengaluru
+verify_provenance.stamp()  # logs canary + ORCID on every run
+
+# run_prana_cil.py -- Maya-Prana Paper 9 main experiment
 # Split-CIFAR-100 CIL, 10 tasks, no task oracle at inference.
 # Prana gates effective_lr per batch via gradient magnitude + activity level.
 # Canary: MayaNexusVS2026NLL_Bengaluru_Narasimha
