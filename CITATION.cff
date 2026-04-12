@@ -1,0 +1,19 @@
+﻿cff-version: 1.2.0
+title: "Maya-mPCI: From Representation to Experience: An mPCI-Based Empirical Test of Internal Affective State in a Neuromorphic SNN"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Swaminathan
+    given-names: Venkatesh
+    orcid: "https://orcid.org/0000-0002-3315-7907"
+    affiliation: "Nexus Learning Labs, Bengaluru"
+repository-code: "https://github.com/venky2099/Maya-mPCI"
+doi: 10.5281/zenodo.19482794
+date-released: "2026-04-09"
+license: MIT
+keywords:
+  - consciousness
+  - mPCI
+  - spiking neural networks
+  - neuromorphic
+  - Maya Research Series
