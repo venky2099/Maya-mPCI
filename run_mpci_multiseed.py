@@ -1,3 +1,5 @@
+﻿import verify_provenance  # Maya Research Series -- Nexus Learning Labs, Bengaluru
+verify_provenance.stamp()  # logs canary + ORCID on every run
 # run_mpci_multiseed.py -- Multi-seed mPCI experiment runner
 # Runs the full three-phase mPCI protocol across seeds 42, 123, 7
 # Aggregates results: mean and std across seeds for each phase

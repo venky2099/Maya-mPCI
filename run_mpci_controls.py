@@ -1,3 +1,5 @@
+﻿import verify_provenance  # Maya Research Series -- Nexus Learning Labs, Bengaluru
+verify_provenance.stamp()  # logs canary + ORCID on every run
 # run_mpci_controls.py -- Three methodological controls for Maya-mPCI
 #
 # Control 1: Training depth matched baseline

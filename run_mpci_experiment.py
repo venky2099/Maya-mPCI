@@ -1,4 +1,6 @@
-﻿# run_mpci_experiment.py -- Maya-mPCI three-phase experiment
+﻿import verify_provenance  # Maya Research Series -- Nexus Learning Labs, Bengaluru
+verify_provenance.stamp()  # logs canary + ORCID on every run
+# run_mpci_experiment.py -- Maya-mPCI three-phase experiment
 # Paper: "From Representation to Experience:
 #         An mPCI-Based Empirical Test of Internal Affective State
 #         in a Neuromorphic Spiking Neural Network"
