@@ -24,3 +24,8 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# Added by fix_all_repos.py
+*.jsonl
+.env
+.maya_provenance.log
